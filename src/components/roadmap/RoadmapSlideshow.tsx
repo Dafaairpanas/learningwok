@@ -136,18 +136,18 @@ export default function RoadmapSlideshow({ dayData, level }: Props) {
   return (
     <div 
         ref={containerRef}
-        className={`bg-canvas text-ink font-sans flex flex-col md:flex-row overflow-hidden border border-ink ${isFullscreen ? 'fixed inset-0 z-50 w-full h-full' : 'h-[800px] w-full max-w-7xl mx-auto shadow-2xl'}`}
+        className={`bg-canvas text-ink font-sans flex flex-col md:flex-row overflow-hidden border border-ink ${isFullscreen ? 'fixed inset-0 z-[200] w-full h-full' : 'h-[800px] w-full max-w-7xl mx-auto shadow-2xl'}`}
     >
       
       {/* SIDEBAR (Progress & Info) */}
-      <aside className="w-full md:w-[320px] flex-shrink-0 bg-surface border-b md:border-b-0 md:border-r border-ink flex flex-row md:flex-col justify-between p-6 md:p-8">
+      <aside className="w-full md:w-[220px] lg:w-[320px] flex-shrink-0 bg-surface border-b md:border-b-0 md:border-r border-ink flex flex-row md:flex-col justify-between p-4 md:p-6 lg:p-8">
          {/* Top Section */}
          <div className="flex flex-col justify-center">
              <div className="flex items-baseline gap-1 mb-2 md:mb-6">
-                 <span className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-ink">
+                 <span className="text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter leading-none text-ink">
                     {String(currentSlideIndex + 1).padStart(2, '0')}
                  </span>
-                 <span className="text-xl md:text-3xl text-ink/40 font-light leading-none">
+                 <span className="text-sm md:text-2xl lg:text-3xl text-ink/60 dark:text-ink/80 font-light leading-none">
                     /{String(slides.length).padStart(2, '0')}
                  </span>
              </div>
@@ -196,7 +196,7 @@ export default function RoadmapSlideshow({ dayData, level }: Props) {
         {currentSlide.type === 'intro' && (
             <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 text-center bg-[url('/grid-pattern.svg')] bg-[length:40px_40px]">
                  <div className="max-w-2xl border-2 border-ink p-6 md:p-12 bg-canvas shadow-[8px_8px_0px_0px_var(--color-ink)]">
-                    <h2 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter uppercase leading-none text-ink">
+                    <h2 className="text-4xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 tracking-tighter uppercase leading-none text-ink">
                         Start<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-neon to-brand-orange">Mission</span>
                     </h2>
                     <p className="text-xl font-medium text-ink/70 mb-12 leading-relaxed">
@@ -213,36 +213,36 @@ export default function RoadmapSlideshow({ dayData, level }: Props) {
         {currentSlide.type === 'kanji' && (
             <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 grid-rows-[auto_auto_1fr] md:grid-rows-2">
                 {/* Hero Cell: Character */}
-                <div className="md:row-span-2 bg-surface flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-ink p-8 md:p-12 relative overflow-hidden group min-h-[300px] md:min-h-0">
+                <div className="md:row-span-2 bg-surface flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-ink p-6 md:p-12 relative overflow-hidden group min-h-[220px] md:min-h-0">
                     <div className="absolute inset-0 opacity-10 bg-[radial-gradient(var(--color-ink)_1px,transparent_1px)] [background-size:20px_20px]"></div>
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-ink/40 w-full text-center md:text-left mb-2 md:absolute md:top-6 md:left-6 md:w-auto md:mb-0">Kanji Character</span>
+                    <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-ink/40 dark:text-gray-400 w-full text-center md:text-left mb-1 md:mb-0 md:absolute md:top-6 md:left-6 md:w-auto">Kanji Character</span>
                     
-                    <h2 className="text-[6rem] md:text-[14rem] font-jp font-bold leading-none z-10 group-hover:scale-110 transition-transform duration-500 ease-out py-4 md:py-0">
+                    <h2 className="text-[5rem] md:text-[14rem] font-jp font-bold leading-none z-10 group-hover:scale-110 transition-transform duration-500 ease-out py-2 md:py-0">
                         {currentSlide.content.kanji?.character}
                     </h2>
-                    <p className="text-2xl font-bold mt-4 font-jp bg-ink text-canvas px-4 py-1">
+                    <p className="text-lg md:text-2xl font-bold mt-2 md:mt-4 font-jp bg-ink text-canvas px-3 py-0.5 md:px-4 md:py-1 rounded-sm">
                         {currentSlide.content.kanji?.meaning}
                     </p>
                 </div>
 
                 {/* Top Right: Readings */}
-                <div className="bg-canvas p-8 border-b border-ink flex flex-col justify-center relative">
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-ink/40 mb-6 block">Readings</span>
+                <div className="bg-canvas p-6 md:p-8 border-b border-ink flex flex-col justify-center relative">
+                    <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-ink/60 dark:text-gray-400 mb-3 md:mb-6 block">Readings</span>
                     
-                    <div className="space-y-6">
-                        <div className="flex items-baseline justify-between group cursor-pointer hover:bg-brand-neon/10 -mx-4 px-4 py-2 transition-colors" onClick={() => playAudio(currentSlide.content.kanji?.onyomi)}>
+                    <div className="space-y-4 md:space-y-6">
+                        <div className="flex items-baseline justify-between group cursor-pointer hover:bg-brand-neon/10 -mx-4 px-4 py-1 md:py-2 transition-colors" onClick={() => playAudio(currentSlide.content.kanji?.onyomi)}>
                              <div>
-                                <span className="text-xs font-bold uppercase text-ink/50 mr-4 w-12 inline-block">ON</span>
-                                <span className="text-3xl font-bold font-jp">{currentSlide.content.kanji?.onyomi}</span>
+                                <span className="text-[10px] md:text-xs font-bold uppercase text-ink/60 dark:text-gray-400 mr-4 w-8 md:w-12 inline-block">ON</span>
+                                <span className="text-xl md:text-3xl font-bold font-jp text-ink dark:text-white">{currentSlide.content.kanji?.onyomi}</span>
                              </div>
-                             <Volume2 className="text-ink/20 group-hover:text-ink transition-colors" size={20} />
+                             <Volume2 className="text-ink/20 group-hover:text-ink transition-colors" size={18} />
                         </div>
-                        <div className="flex items-baseline justify-between group cursor-pointer hover:bg-brand-orange/10 -mx-4 px-4 py-2 transition-colors" onClick={() => playAudio(currentSlide.content.kanji?.kunyomi)}>
+                        <div className="flex items-baseline justify-between group cursor-pointer hover:bg-brand-orange/10 -mx-4 px-4 py-1 md:py-2 transition-colors" onClick={() => playAudio(currentSlide.content.kanji?.kunyomi)}>
                              <div>
-                                <span className="text-xs font-bold uppercase text-ink/50 mr-4 w-12 inline-block">KUN</span>
-                                <span className="text-3xl font-bold font-jp">{currentSlide.content.kanji?.kunyomi}</span>
+                                <span className="text-[10px] md:text-xs font-bold uppercase text-ink/60 dark:text-gray-400 mr-4 w-8 md:w-12 inline-block">KUN</span>
+                                <span className="text-xl md:text-3xl font-bold font-jp text-ink dark:text-white">{currentSlide.content.kanji?.kunyomi}</span>
                              </div>
-                             <Volume2 className="text-ink/20 group-hover:text-ink transition-colors" size={20} />
+                             <Volume2 className="text-ink/20 group-hover:text-ink transition-colors" size={18} />
                         </div>
                     </div>
                 </div>
@@ -263,28 +263,28 @@ export default function RoadmapSlideshow({ dayData, level }: Props) {
         {/* KOSAKATA SLIDE (HORIZONTAL SPLIT) */}
         {currentSlide.type === 'kosakata' && (
             <div className="h-full w-full flex flex-col">
-                <div className="flex-1 bg-surface flex flex-col items-center justify-center p-6 md:p-12 border-b border-ink relative cursor-pointer group" onClick={() => playAudio(currentSlide.content.kosakata?.kanji)}>
-                     <span className="absolute top-6 left-6 text-xs font-bold tracking-widest uppercase text-ink/60">Flashcard</span>
-                     <Volume2 className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="flex-1 bg-surface flex flex-col items-center justify-center p-6 md:p-12 border-b border-ink relative cursor-pointer group min-h-[220px]" onClick={() => playAudio(currentSlide.content.kosakata?.kanji)}>
+                     <span className="absolute top-4 left-4 md:top-6 md:left-6 text-[10px] md:text-xs font-bold tracking-widest uppercase text-ink/40 dark:text-gray-400">Flashcard</span>
+                     <Volume2 className="absolute top-4 right-4 md:top-6 md:right-6 opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
                      
-                     <h2 className="text-6xl md:text-9xl font-jp font-bold mb-4 text-ink">{currentSlide.content.kosakata?.kanji}</h2>
+                     <h2 className="text-5xl md:text-9xl font-jp font-bold mb-2 md:mb-4 text-ink">{currentSlide.content.kosakata?.kanji}</h2>
                      {currentSlide.content.kosakata?.kanji !== currentSlide.content.kosakata?.hiragana && (
-                        <p className="text-3xl font-jp font-medium opacity-60 text-ink">{currentSlide.content.kosakata?.hiragana}</p>
+                        <p className="text-xl md:text-3xl font-jp font-medium opacity-60 text-ink">{currentSlide.content.kosakata?.hiragana}</p>
                      )}
                      {currentSlide.content.kosakata?.romaji && (
-                        <p className="text-lg font-medium opacity-40 text-ink mt-2">{currentSlide.content.kosakata.romaji}</p>
+                        <p className="text-sm md:text-lg font-medium opacity-60 text-ink dark:text-gray-300 mt-1 md:mt-2">{currentSlide.content.kosakata.romaji}</p>
                      )}
                 </div>
                 
                 <div className="h-[40%] flex flex-col md:flex-row">
-                    <div className="flex-1 p-8 border-b md:border-b-0 md:border-r border-ink flex flex-col justify-center items-center text-center bg-canvas">
-                         <span className="text-xs font-bold tracking-widest uppercase text-ink/40 mb-2">Meaning</span>
-                         <p className="text-3xl md:text-4xl font-bold">{currentSlide.content.kosakata?.meaning}</p>
+                    <div className="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-ink flex flex-col justify-center items-center text-center bg-canvas">
+                         <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase text-ink/40 dark:text-gray-400 mb-1 md:mb-2">Meaning</span>
+                         <p className="text-2xl md:text-4xl font-bold text-ink dark:text-white">{currentSlide.content.kosakata?.meaning}</p>
                     </div>
                     <div className="flex-[1.5] p-8 bg-surface overflow-y-auto">
-                        <span className="text-xs font-bold tracking-widest uppercase text-ink/40 mb-4 block">Context & Notes</span>
+                        <span className="text-xs font-bold tracking-widest uppercase text-ink/40 dark:text-gray-400 mb-4 block">Context & Notes</span>
                         {currentSlide.note && (
-                            <MarkdownRenderer content={currentSlide.note} className="text-lg leading-relaxed" />
+                            <MarkdownRenderer content={currentSlide.note} className="text-lg leading-relaxed text-ink dark:text-gray-300" />
                         )}
                     </div>
                 </div>
@@ -293,42 +293,41 @@ export default function RoadmapSlideshow({ dayData, level }: Props) {
 
         {/* BUNPO SLIDE */}
         {currentSlide.type === 'bunpo' && (
-             <div className="h-full w-full grid md:grid-cols-[1fr_400px]">
-                 <div className="bg-canvas p-6 md:p-12 flex flex-col justify-center border-b md:border-b-0 md:border-r border-ink">
-                      <div className="inline-flex items-center gap-3 mb-8">
-                          <span className="px-3 py-1 bg-ink text-canvas text-xs font-bold uppercase tracking-wider">Grammar</span>
-                          <span className="w-12 h-px bg-ink"></span>
-                      </div>
+             <div className="w-full flex flex-col md:h-full">
+                 <div className="bg-surface flex flex-col items-center justify-center p-6 md:p-12 border-b border-ink relative group min-h-[300px] md:flex-1 md:min-h-0">
+                      <span className="absolute top-4 left-4 md:top-6 md:left-6 text-[10px] md:text-xs font-bold tracking-widest uppercase text-ink/40 dark:text-gray-400">Grammar</span>
                       
-                      <h2 className="text-4xl md:text-7xl font-jp font-bold mb-6 flex items-center gap-4 cursor-pointer hover:text-brand-orange transition-colors" onClick={() => playAudio(currentSlide.content.bunpo?.pattern)}>
+                      <h2 className="text-4xl md:text-7xl font-jp font-bold mb-4 md:mb-6 flex items-center gap-4 cursor-pointer hover:text-brand-orange transition-colors text-ink" onClick={() => playAudio(currentSlide.content.bunpo?.pattern)}>
                           {currentSlide.content.bunpo?.pattern}
-                          <Volume2 size={32} className="text-ink/20" />
+                          <Volume2 className="text-ink/20 opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 md:w-10 md:h-10" />
                       </h2>
                       
-                      <p className="text-xl md:text-3xl font-bold text-ink/60 mb-8 md:mb-12">
+                      <p className="text-xl md:text-3xl font-bold text-ink/80 dark:text-white text-center max-w-4xl">
                           {currentSlide.content.bunpo?.meaning}
                       </p>
-
-                      <div className="bg-surface border border-ink p-6 mb-8">
-                           <span className="text-xs font-bold uppercase text-ink/40 mb-4 block">Example</span>
-                           {currentSlide.content.bunpo?.examples && Array.isArray(currentSlide.content.bunpo.examples) && (
-                                <div className="space-y-4">
-                                    {currentSlide.content.bunpo.examples.map((ex: string, i: number) => (
-                                        <div key={i} className="flex gap-4 items-start">
-                                            <div className="w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center text-xs font-bold flex-shrink-0">{i+1}</div>
-                                            <p className="text-lg font-jp">{ex}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                           )}
-                      </div>
                  </div>
 
-                 <div className="bg-surface p-6 md:p-8 border-l border-ink overflow-y-auto">
-                     <h3 className="text-xl font-bold uppercase border-b border-ink pb-4 mb-6">Explanation</h3>
-                     {currentSlide.note && (
-                         <MarkdownRenderer content={currentSlide.note} className="prose-base md:prose-lg" />
-                     )}
+                 <div className="flex flex-col md:flex-row md:h-[45%]">
+                      {currentSlide.content.bunpo?.examples && Array.isArray(currentSlide.content.bunpo.examples) && currentSlide.content.bunpo.examples.length > 0 && (
+                        <div className="p-6 md:p-8 bg-canvas border-b md:border-b-0 md:border-r border-ink md:flex-1 md:overflow-y-auto">
+                           <span className="text-xs font-bold tracking-widest uppercase text-ink/40 dark:text-gray-400 mb-4 block">Examples</span>
+                           <div className="space-y-4">
+                                {currentSlide.content.bunpo.examples.map((ex: string, i: number) => (
+                                    <div key={i} className="flex gap-4 items-start">
+                                        <div className="w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1">{i+1}</div>
+                                        <p className="text-lg font-jp text-ink dark:text-white leading-relaxed">{ex}</p>
+                                    </div>
+                                ))}
+                           </div>
+                        </div>
+                      )}
+
+                      <div className="p-6 md:p-8 bg-surface md:flex-1 md:overflow-y-auto">
+                          <span className="text-xs font-bold tracking-widest uppercase text-ink/40 dark:text-gray-400 mb-4 block">Explanation</span>
+                          {currentSlide.note && (
+                              <MarkdownRenderer content={currentSlide.note} className="prose-base md:prose-lg text-ink dark:text-gray-300" />
+                          )}
+                      </div>
                  </div>
              </div>
         )}
@@ -338,7 +337,7 @@ export default function RoadmapSlideshow({ dayData, level }: Props) {
              <div className="h-full flex flex-col items-center justify-center bg-brand-neon text-black p-8 text-center">
                  <h1 className="text-[12rem] leading-none font-black opacity-20 select-none absolute">DONE</h1>
                  
-                 <div className="relative z-10 bg-canvas border-2 border-ink p-12 shadow-[12px_12px_0px_0px_var(--color-ink)] max-w-lg w-full">
+                 <div className="relative z-10 bg-canvas text-ink border-2 border-ink p-12 shadow-[12px_12px_0px_0px_var(--color-ink)] max-w-lg w-full">
                      <h2 className="text-4xl font-black uppercase mb-4">Mission Complete</h2>
                      <p className="text-xl font-medium mb-8">Day {dayData.day_number} cleared successfully.</p>
                      

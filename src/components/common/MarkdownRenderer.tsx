@@ -34,6 +34,7 @@ export default function MarkdownRenderer({ content, className = '' }: Props) {
         prose-ul:list-disc prose-ul:pl-4
         prose-code:bg-ink/5 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-brand-orange prose-code:font-bold prose-code:before:content-none prose-code:after:content-none
         prose-pre:bg-surface prose-pre:border prose-pre:border-ink prose-pre:text-ink
+        dark:prose-p:text-gray-100 dark:prose-li:text-gray-100 dark:prose-strong:text-white
         ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />

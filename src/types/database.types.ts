@@ -240,7 +240,137 @@ export interface Database {
           last_reviewed?: string | null
           next_review?: string | null
           review_count?: number
+        created_at?: string
+        }
+      }
+      learning_days: {
+        Row: {
+          id: string
+          jlpt_level: string
+          day_number: number
+          title: string
+          description: string | null
+          estimated_minutes: number
+          is_review_day: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          jlpt_level: string
+          day_number: number
+          title: string
+          description?: string | null
+          estimated_minutes?: number
+          is_review_day?: boolean
           created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          jlpt_level?: string
+          day_number?: number
+          title?: string
+          description?: string | null
+          estimated_minutes?: number
+          is_review_day?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      learning_day_topics: {
+        Row: {
+          id: string
+          learning_day_id: string
+          title: string
+          content_type: 'kanji' | 'kosakata' | 'bunpo'
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          learning_day_id: string
+          title: string
+          content_type: 'kanji' | 'kosakata' | 'bunpo'
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          learning_day_id?: string
+          title?: string
+          content_type?: 'kanji' | 'kosakata' | 'bunpo'
+          sort_order?: number
+          created_at?: string
+        }
+      }
+      learning_topic_kanji: {
+        Row: {
+          id: string
+          topic_id: string
+          kanji_id: string
+          note: string | null
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          topic_id: string
+          kanji_id: string
+          note?: string | null
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          topic_id?: string
+          kanji_id?: string
+          note?: string | null
+          sort_order?: number
+        }
+      }
+      learning_topic_kosakata: {
+        Row: {
+          id: string
+          topic_id: string
+          kosakata_id: string
+          note: string | null
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          topic_id: string
+          kosakata_id: string
+          note?: string | null
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          topic_id?: string
+          kosakata_id?: string
+          note?: string | null
+          sort_order?: number
+        }
+      }
+      learning_topic_bunpo: {
+        Row: {
+          id: string
+          topic_id: string
+          bunpo_id: string
+          note: string | null
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          topic_id: string
+          bunpo_id: string
+          note?: string | null
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          topic_id?: string
+          bunpo_id?: string
+          note?: string | null
+          sort_order?: number
         }
       }
     }

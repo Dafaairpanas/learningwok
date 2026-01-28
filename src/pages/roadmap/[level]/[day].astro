@@ -7,12 +7,20 @@ import RoadmapSlideshow from "../../../components/roadmap/RoadmapSlideshow";
 export async function getStaticPaths() {
   const days = await roadmapService.getRoadmapList();
 
-  return days.map((day) => ({
-    params: {
-      level: day.jlpt_level,
-      day: String(day.day_number),
+  return days.flatMap((day) => [
+    {
+      params: {
+        level: day.jlpt_level, // Keep original casing (e.g. "N5")
+        day: String(day.day_number),
+      },
     },
-  }));
+    {
+      params: {
+        level: day.jlpt_level.toLowerCase(), // Add lowercase version (e.g. "n5")
+        day: String(day.day_number),
+      },
+    },
+  ]);
 }
 
 const { level, day } = Astro.params;

@@ -35,8 +35,6 @@ const categoryOptions = [
 
 const sortOptions = [
   { value: 'default', label: 'Default' },
-  { value: 'stroke_asc', label: 'Stroke Count ↑' },
-  { value: 'stroke_desc', label: 'Stroke Count ↓' },
   { value: 'id_asc', label: 'ID (1-9)' },
   { value: 'category_asc', label: 'Kategori (A-Z)' },
 ];
@@ -76,11 +74,7 @@ export default function KanjiList({ initialKanji }: KanjiListProps) {
     }
 
     // Sort
-    if (sortBy === 'stroke_asc') {
-      result.sort((a, b) => (a.stroke_count || 0) - (b.stroke_count || 0));
-    } else if (sortBy === 'stroke_desc') {
-      result.sort((a, b) => (b.stroke_count || 0) - (a.stroke_count || 0));
-    } else if (sortBy === 'id_asc') {
+    if (sortBy === 'id_asc') {
       result.sort((a, b) => (a.sort_id || 0) - (b.sort_id || 0));
     } else if (sortBy === 'category_asc') {
       result.sort((a, b) => (a.categories?.slug || '').localeCompare(b.categories?.slug || ''));

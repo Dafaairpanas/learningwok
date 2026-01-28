@@ -27,6 +27,33 @@ import { Plus } from "lucide-react";
       </button>
     </div>
 
+    <!-- Filter Toolbar -->
+    <div
+      class="flex flex-col md:flex-row gap-4 bg-surface border border-ink p-4 mb-0 border-b-0"
+    >
+      <div class="flex-1">
+        <input
+          type="text"
+          id="search-input"
+          class="w-full border-2 border-border-line bg-canvas p-2 text-sm font-bold focus:border-ink focus:outline-none transition-colors"
+          placeholder="Cari Kanji / Arti / Cara Baca..."
+        />
+      </div>
+      <div>
+        <select
+          id="filter-level"
+          class="w-full md:w-48 border-2 border-border-line bg-canvas p-2 text-sm font-bold focus:border-ink focus:outline-none transition-colors"
+        >
+          <option value="">SEMUA LEVEL</option>
+          <option value="N5">N5</option>
+          <option value="N4">N4</option>
+          <option value="N3">N3</option>
+          <option value="N2">N2</option>
+          <option value="N1">N1</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Swiss Table -->
     <div class="border border-border-line bg-canvas">
       <div class="overflow-x-auto">
@@ -245,6 +272,14 @@ import { Plus } from "lucide-react";
   const backdrop = document.getElementById("modal-backdrop");
   const totalCountEl = document.getElementById("total-count");
 
+  // Filter Elements
+  const searchInput = document.getElementById(
+    "search-input",
+  ) as HTMLInputElement;
+  const filterLevel = document.getElementById(
+    "filter-level",
+  ) as HTMLSelectElement;
+
   // Inputs
   const idInput = document.getElementById("kanji-id") as HTMLInputElement;
   const characterInput = document.getElementById(
@@ -257,6 +292,30 @@ import { Plus } from "lucide-react";
   const strokeInput = document.getElementById(
     "stroke_count",
   ) as HTMLInputElement;
+
+  // FILTER LOGIC
+  function applyFilters() {
+    const term = searchInput?.value.toLowerCase() || "";
+    const level = filterLevel?.value || "";
+
+    const filtered = kanjiList.filter((item) => {
+      const matchText =
+        item.character.toLowerCase().includes(term) ||
+        item.meaning.toLowerCase().includes(term) ||
+        (item.onyomi && item.onyomi.toLowerCase().includes(term)) ||
+        (item.kunyomi && item.kunyomi.toLowerCase().includes(term));
+
+      const matchLevel = level ? item.jlpt_level === level : true;
+
+      return matchText && matchLevel;
+    });
+
+    renderTable(filtered);
+  }
+
+  // Bind Events
+  searchInput?.addEventListener("input", applyFilters);
+  filterLevel?.addEventListener("change", applyFilters);
 
   // Render Table
   function renderTable(data: KanjiWithLevel[]) {

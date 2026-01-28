@@ -19,12 +19,12 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*supabase\.co\/.*/i,
-            handler: 'NetworkFirst',
+            handler: 'CacheFirst', // Always use cache first for offline-first experience
             options: {
               cacheName: 'supabase-api-cache',
               expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                maxEntries: 500, // Keep more entries
+                // No maxAgeSeconds = permanent cache until new build
               },
               cacheableResponse: {
                 statuses: [0, 200],

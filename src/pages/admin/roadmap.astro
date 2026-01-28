@@ -1,16 +1,14 @@
 ---
 import AdminLayout from "../../layouts/AdminLayout.astro";
-import { Plus } from "lucide-react";
-
-// Use client side fetching for consistency
+import { Plus, Map, Calendar } from "lucide-react";
 ---
 
-<AdminLayout title="Kelola Bunpo (文法)">
+<AdminLayout title="Kelola Roadmap">
   <div class="space-y-8">
     <div class="flex items-end justify-between border-b border-ink pb-6">
       <div>
         <h2 class="text-4xl font-black uppercase tracking-tighter text-ink">
-          Daftar Bunpo
+          Learning Roadmap
         </h2>
         <p
           id="total-count"
@@ -24,7 +22,7 @@ import { Plus } from "lucide-react";
         class="inline-flex items-center gap-2 border-2 border-ink bg-brand-neon px-6 py-3 text-sm font-bold uppercase tracking-widest text-ink hover:bg-brand-orange hover:translate-x-1 hover:-translate-y-1 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none"
       >
         <Plus className="h-4 w-4" />
-        Tambah Bunpo
+        Tambah Day
       </button>
     </div>
 
@@ -37,7 +35,7 @@ import { Plus } from "lucide-react";
           type="text"
           id="search-input"
           class="w-full border-2 border-border-line bg-canvas p-2 text-sm font-bold focus:border-ink focus:outline-none transition-colors"
-          placeholder="Cari Pola / Arti / Penggunaan..."
+          placeholder="Cari Judul Day..."
         />
       </div>
       <div>
@@ -62,20 +60,24 @@ import { Plus } from "lucide-react";
           <thead>
             <tr class="border-b border-border-line bg-surface">
               <th
-                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-32"
-                >Tipe</th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-24 text-center"
+                >Level</th
               >
               <th
-                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-48"
-                >Pola</th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-20 text-center"
+                >Day</th
               >
               <th
                 class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line"
-                >Arti</th
+                >Judul</th
               >
               <th
-                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-24 text-center"
-                >Level</th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-32 text-center"
+                >Topics</th
+              >
+              <th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-28 text-center"
+                >Menit</th
               >
               <th
                 class="p-4 text-xs font-black uppercase tracking-widest text-ink text-right w-28"
@@ -86,7 +88,7 @@ import { Plus } from "lucide-react";
           <tbody id="table-body" class="divide-y divide-border-line">
             <tr>
               <td
-                colspan="5"
+                colspan="6"
                 class="p-8 text-center text-subtle font-medium animate-pulse"
               >
                 INITIALIZING DATA STREAM...
@@ -98,15 +100,14 @@ import { Plus } from "lucide-react";
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal Add/Edit Day -->
   <div
-    id="bunpo-modal"
+    id="day-modal"
     class="fixed inset-0 z-50 hidden"
     aria-labelledby="modal-title"
     role="dialog"
     aria-modal="true"
   >
-    <!-- Backdrop -->
     <div
       id="modal-backdrop"
       class="fixed inset-0 bg-ink/80 backdrop-blur-sm transition-opacity"
@@ -124,37 +125,24 @@ import { Plus } from "lucide-react";
             class="text-xl font-black uppercase tracking-tighter text-ink"
             id="modal-title"
           >
-            TAMBAH BUNPO
+            TAMBAH LEARNING DAY
           </h3>
         </div>
 
         <div class="p-6">
-          <form id="bunpo-form" class="space-y-6">
-            <input type="hidden" id="bunpo-id" name="id" />
+          <form id="day-form" class="space-y-6">
+            <input type="hidden" id="day-id" name="id" />
 
             <div class="grid grid-cols-2 gap-6">
               <div>
                 <label
-                  for="bunpo_type"
-                  class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
-                  >Tipe</label
-                >
-                <select
-                  id="bunpo_type"
-                  class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
-                >
-                  <option value="grammar">Tata Bahasa</option>
-                  <option value="sentence_pattern">Pola Kalimat</option>
-                </select>
-              </div>
-              <div>
-                <label
                   for="jlpt_level"
                   class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
-                  >Level</label
+                  >Level JLPT</label
                 >
                 <select
                   id="jlpt_level"
+                  required
                   class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
                 >
                   <option value="N5">N5</option>
@@ -162,63 +150,72 @@ import { Plus } from "lucide-react";
                   <option value="N3">N3</option>
                 </select>
               </div>
+              <div>
+                <label
+                  for="day_number"
+                  class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                  >Day Number</label
+                >
+                <input
+                  type="number"
+                  id="day_number"
+                  required
+                  min="1"
+                  class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                  placeholder="1"
+                />
+              </div>
             </div>
 
             <div>
               <label
-                for="category_id"
+                for="title"
                 class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
-                >Kategori</label
-              >
-              <select
-                id="category_id"
-                class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
-              >
-                <option value="">- PILIH -</option>
-              </select>
-            </div>
-
-            <div>
-              <label
-                for="pattern"
-                class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
-                >Pola</label
+                >Judul</label
               >
               <input
                 type="text"
-                id="pattern"
+                id="title"
                 required
-                class="block w-full border-2 border-border-line bg-surface p-3 font-jp text-lg font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
-                placeholder="Ex: ~ている"
+                class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                placeholder="Huruf & Sapaan Dasar"
               />
             </div>
 
             <div>
               <label
-                for="meaning"
+                for="description"
                 class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
-                >Arti</label
+                >Deskripsi</label
               >
               <textarea
-                id="meaning"
-                required
-                rows="2"
-                class="block w-full border-2 border-border-line bg-canvas p-3 font-medium focus:border-ink focus:outline-none focus:ring-0 transition-colors"
-                placeholder="Ex: Sedang melakukan..."></textarea>
-            </div>
-
-            <div>
-              <label
-                for="usage"
-                class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
-                >Penggunaan (Opsional)</label
-              >
-              <textarea
-                id="usage"
+                id="description"
                 rows="2"
                 class="block w-full border-2 border-border-line bg-canvas p-3 text-sm focus:border-ink focus:outline-none focus:ring-0 transition-colors"
-                placeholder="Ex: Digunakan untuk aksi yang sedang berlangsung"
-              ></textarea>
+                placeholder="Deskripsi singkat untuk day ini..."></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <label
+                  for="estimated_minutes"
+                  class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                  >Estimasi (menit)</label
+                >
+                <input
+                  type="number"
+                  id="estimated_minutes"
+                  min="5"
+                  class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                  placeholder="30"
+                />
+              </div>
+              <div class="flex items-end">
+                <label class="flex items-center gap-3 cursor-pointer p-3">
+                  <input type="checkbox" id="is_review_day" class="w-5 h-5" />
+                  <span class="text-sm font-bold uppercase">Review Day?</span>
+                </label>
+              </div>
             </div>
 
             <div class="pt-4 flex gap-4">
@@ -233,7 +230,7 @@ import { Plus } from "lucide-react";
                 type="submit"
                 class="flex-1 border-2 border-ink bg-ink text-canvas py-3 text-sm font-bold uppercase tracking-widest hover:bg-brand-orange hover:text-ink hover:border-ink transition-colors"
               >
-                Simpan Data
+                Simpan
               </button>
             </div>
           </form>
@@ -244,17 +241,26 @@ import { Plus } from "lucide-react";
 </AdminLayout>
 
 <script>
-  import { supabase } from "../../lib/supabase";
-  import { materiService, type BunpoWithLevel } from "../../services/materi";
-  import { adminService, type BunpoInsert } from "../../services/admin";
+  import { adminService } from "../../services/admin";
 
-  let bunpoList: BunpoWithLevel[] = [];
+  interface LearningDayWithTopics {
+    id: string;
+    jlpt_level: string;
+    day_number: number;
+    title: string;
+    description: string | null;
+    estimated_minutes: number;
+    is_review_day: boolean;
+    topics: { count: number }[];
+  }
 
-  // DOM
+  let daysList: LearningDayWithTopics[] = [];
+
+  // DOM Elements
   const tableBody = document.getElementById("table-body");
-  const modal = document.getElementById("bunpo-modal");
+  const modal = document.getElementById("day-modal");
   const modalTitle = document.getElementById("modal-title");
-  const form = document.getElementById("bunpo-form") as HTMLFormElement;
+  const form = document.getElementById("day-form") as HTMLFormElement;
   const addBtn = document.getElementById("add-btn");
   const cancelBtn = document.getElementById("cancel-btn");
   const backdrop = document.getElementById("modal-backdrop");
@@ -268,90 +274,83 @@ import { Plus } from "lucide-react";
     "filter-level",
   ) as HTMLSelectElement;
 
-  // Inputs
-  const idInput = document.getElementById("bunpo-id") as HTMLInputElement;
-  const typeInput = document.getElementById("bunpo_type") as HTMLSelectElement;
+  // Form Inputs
+  const idInput = document.getElementById("day-id") as HTMLInputElement;
   const levelInput = document.getElementById("jlpt_level") as HTMLSelectElement;
-  const categoryInput = document.getElementById(
-    "category_id",
-  ) as HTMLSelectElement;
-  const patternInput = document.getElementById("pattern") as HTMLInputElement;
-  const meaningInput = document.getElementById(
-    "meaning",
+  const dayNumberInput = document.getElementById(
+    "day_number",
+  ) as HTMLInputElement;
+  const titleInput = document.getElementById("title") as HTMLInputElement;
+  const descriptionInput = document.getElementById(
+    "description",
   ) as HTMLTextAreaElement;
-  const usageInput = document.getElementById("usage") as HTMLTextAreaElement;
+  const minutesInput = document.getElementById(
+    "estimated_minutes",
+  ) as HTMLInputElement;
+  const reviewDayInput = document.getElementById(
+    "is_review_day",
+  ) as HTMLInputElement;
 
-  // -- FILTER LOGIC --
+  // Filter Logic
   function applyFilters() {
     const term = searchInput?.value.toLowerCase() || "";
     const level = filterLevel?.value || "";
 
-    const filtered = bunpoList.filter((item) => {
-      const matchText =
-        item.pattern.toLowerCase().includes(term) ||
-        item.meaning.toLowerCase().includes(term) ||
-        (item.usage && item.usage.toLowerCase().includes(term));
-
+    const filtered = daysList.filter((item) => {
+      const matchText = item.title.toLowerCase().includes(term);
       const matchLevel = level ? item.jlpt_level === level : true;
-
       return matchText && matchLevel;
     });
 
     renderTable(filtered);
   }
 
-  // Bind Events
   searchInput?.addEventListener("input", applyFilters);
   filterLevel?.addEventListener("change", applyFilters);
 
-  function renderTable(data: BunpoWithLevel[]) {
+  function renderTable(data: LearningDayWithTopics[]) {
     if (!tableBody) return;
     if (data.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-subtle font-bold uppercase tracking-widest">No Data Found</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-subtle font-bold uppercase tracking-widest">No Data Found</td></tr>`;
       return;
     }
 
-    const grammarCount = data.filter((d) => d.bunpo_type === "grammar").length;
-    const polaCount = data.filter(
-      (d) => d.bunpo_type === "sentence_pattern",
-    ).length;
-    if (totalCountEl)
-      totalCountEl.textContent = `${data.length} ITEM (G: ${grammarCount}, P: ${polaCount})`;
+    if (totalCountEl) totalCountEl.textContent = `${data.length} LEARNING DAYS`;
 
     tableBody.innerHTML = data
       .map(
         (item) => `
         <tr class="group hover:bg-surface transition-colors">
-            <td class="p-4 border-r border-border-line">
-                <span class="inline-block px-2 py-1 text-xs font-bold uppercase tracking-widest border border-ink ${
-                  item.bunpo_type === "grammar"
-                    ? "bg-brand-neon text-ink"
-                    : "bg-surface text-subtle"
-                }">
-                ${item.bunpo_type === "grammar" ? "Tata Bahasa" : "Pola"}
-                </span>
-            </td>
-            <td class="p-4 border-r border-border-line font-jp text-lg font-bold text-ink">${item.pattern}</td>
-            <td class="p-4 border-r border-border-line font-medium text-ink">${item.meaning}</td>
             <td class="p-4 border-r border-border-line text-center">
-                 <span class="inline-block border border-ink bg-canvas px-2 py-1 text-xs font-bold uppercase tracking-widest ${
-                   item.jlpt_level === "N5"
-                     ? "text-brand-green"
-                     : item.jlpt_level === "N4"
-                       ? "text-brand-blue"
-                       : "text-brand-purple"
-                 }">${item.jlpt_level || "?"}</span>
+                <span class="inline-block border border-ink bg-canvas px-2 py-1 text-xs font-bold uppercase tracking-widest ${
+                  item.jlpt_level === "N5"
+                    ? "text-brand-green"
+                    : item.jlpt_level === "N4"
+                      ? "text-brand-blue"
+                      : "text-brand-purple"
+                }">${item.jlpt_level}</span>
             </td>
-             <td class="p-4 text-right">
+            <td class="p-4 border-r border-border-line text-center font-black text-2xl text-ink">${item.day_number}</td>
+            <td class="p-4 border-r border-border-line">
+                <div class="font-bold text-ink">${item.title}</div>
+                ${item.description ? `<div class="text-xs text-subtle mt-1 truncate max-w-xs">${item.description}</div>` : ""}
+                ${item.is_review_day ? '<span class="inline-block mt-1 px-2 py-0.5 bg-brand-orange text-ink text-xs font-bold uppercase">Review</span>' : ""}
+            </td>
+            <td class="p-4 border-r border-border-line text-center font-bold text-ink">${item.topics?.[0]?.count || 0}</td>
+            <td class="p-4 border-r border-border-line text-center font-medium text-ink">${item.estimated_minutes} min</td>
+            <td class="p-4 text-right">
                 <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button class="edit-btn p-2 border border-transparent hover:border-ink hover:bg-canvas text-subtle hover:text-ink transition-all" data-id="${item.id}" title="Edit">
+                  <a href="/admin/roadmap-day?id=${item.id}" class="p-2 border border-transparent hover:border-ink hover:bg-canvas text-subtle hover:text-ink transition-all" title="Edit Topics">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  </a>
+                  <button class="edit-btn p-2 border border-transparent hover:border-ink hover:bg-canvas text-subtle hover:text-ink transition-all" data-id="${item.id}" title="Edit Day">
                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                   </button>
                   <button class="delete-btn p-2 border border-transparent hover:border-red-600 hover:bg-red-50 text-subtle hover:text-red-600 transition-all" data-id="${item.id}" title="Delete">
                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                   </button>
                 </div>
-             </td>
+            </td>
         </tr>
       `,
       )
@@ -361,7 +360,7 @@ import { Plus } from "lucide-react";
     document.querySelectorAll(".edit-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const id = (e.currentTarget as HTMLElement).dataset.id;
-        const item = bunpoList.find((b) => b.id === id);
+        const item = daysList.find((d) => d.id === id);
         if (item) openModal(item);
       });
     });
@@ -374,55 +373,38 @@ import { Plus } from "lucide-react";
     });
   }
 
-  // --- CRUD Logic ---
-  async function loadCategories() {
-    if (!supabase) return;
-    const { data, error } = await supabase
-      .from("categories")
-      .select("id, name")
-      .eq("content_type", "bunpo")
-      .order("name");
-
-    if (data && !error && categoryInput) {
-      categoryInput.innerHTML =
-        '<option value="">- PILIH -</option>' +
-        data
-          .map((cat) => `<option value="${cat.id}">${cat.name}</option>`)
-          .join("");
-    }
-  }
-
   async function loadData() {
     try {
-      await loadCategories();
-      bunpoList = await materiService.getBunpo(10000);
-      renderTable(bunpoList);
+      const data = await adminService.getLearningDays();
+      daysList = data as LearningDayWithTopics[];
+      renderTable(daysList);
     } catch (err) {
       console.error(err);
       if (tableBody)
-        tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-red-600 font-bold uppercase tracking-widest py-8">Connection Failed</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-red-600 font-bold uppercase tracking-widest py-8">Connection Failed</td></tr>`;
     }
   }
 
-  function openModal(item: BunpoWithLevel | null = null) {
+  function openModal(item: LearningDayWithTopics | null = null) {
     if (modal) modal.classList.remove("hidden");
     if (modalTitle)
-      modalTitle.textContent = item ? "EDIT BUNPO" : "TAMBAH BUNPO";
+      modalTitle.textContent = item
+        ? "EDIT LEARNING DAY"
+        : "TAMBAH LEARNING DAY";
 
     if (item) {
       idInput.value = item.id;
-      typeInput.value = item.bunpo_type || "grammar";
-      levelInput.value = item.jlpt_level || "N5";
-      categoryInput.value = (item as any).category_id || "";
-      patternInput.value = item.pattern;
-      meaningInput.value = item.meaning;
-      usageInput.value = item.usage || "";
+      levelInput.value = item.jlpt_level;
+      dayNumberInput.value = String(item.day_number);
+      titleInput.value = item.title;
+      descriptionInput.value = item.description || "";
+      minutesInput.value = String(item.estimated_minutes);
+      reviewDayInput.checked = item.is_review_day;
     } else {
       form.reset();
       idInput.value = "";
       levelInput.value = "N5";
-      typeInput.value = "grammar";
-      categoryInput.value = "";
+      minutesInput.value = "30";
     }
   }
 
@@ -438,22 +420,20 @@ import { Plus } from "lucide-react";
     e.preventDefault();
 
     const id = idInput.value;
-    const payload: BunpoInsert = {
-      bunpo_type: typeInput.value as "grammar" | "sentence_pattern",
+    const payload = {
       jlpt_level: levelInput.value,
-      category_id: categoryInput.value || null,
-      pattern: patternInput.value,
-      meaning: meaningInput.value,
-      usage: usageInput.value || null,
-      examples: [],
-      notes: null,
+      day_number: parseInt(dayNumberInput.value),
+      title: titleInput.value,
+      description: descriptionInput.value || null,
+      estimated_minutes: parseInt(minutesInput.value) || 30,
+      is_review_day: reviewDayInput.checked,
     };
 
     try {
       if (id) {
-        await adminService.updateBunpo(id, payload);
+        await adminService.updateLearningDay(id, payload);
       } else {
-        await adminService.createBunpo(payload);
+        await adminService.createLearningDay(payload);
       }
       closeModal();
       loadData();
@@ -463,9 +443,14 @@ import { Plus } from "lucide-react";
   });
 
   async function handleDelete(id: string) {
-    if (!confirm("Are you sure?")) return;
+    if (
+      !confirm(
+        "Hapus Learning Day ini? Semua topics dan items juga akan terhapus!",
+      )
+    )
+      return;
     try {
-      await adminService.deleteBunpo(id);
+      await adminService.deleteLearningDay(id);
       loadData();
     } catch (err) {
       alert("Delete failed: " + (err as Error).message);

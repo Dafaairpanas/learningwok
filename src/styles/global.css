@@ -8,34 +8,32 @@
 @layer base {
   :root {
     /* Light Mode (Default) */
-    --color-canvas: #FFFFFF;
-    --color-ink: #09090B;
-    --color-surface: #F4F4F5;
-    --color-border: #E4E4E7;
-    --color-subtle: #71717A;
-    
-    --color-brand-neon: #39FF14;
-    --color-brand-orange: #F97316;
+    --color-canvas: #ffffff;
+    --color-ink: #09090b;
+    --color-surface: #f4f4f5;
+    --color-border: #e4e4e7;
+    --color-subtle: #71717a;
+
+    --color-brand-neon: #39ff14;
+    --color-brand-orange: #f97316;
 
     /* Semantic Inverse Tokens (for hovers) */
-    --color-inv-canvas: #09090B; /* Black background on hover in light mode */
-    --color-inv-ink: #FFFFFF;    /* White text on hover in light mode */
+    --color-inv-canvas: #09090b; /* Black background on hover in light mode */
+    --color-inv-ink: #ffffff; /* White text on hover in light mode */
   }
 
   .dark {
     /* Dark Mode */
     --color-canvas: #000000; /* Pure Black */
-    --color-ink: #FFFFFF;    /* Pure White */
+    --color-ink: #ffffff; /* Pure White */
     --color-surface: #101010; /* Slightly lighter black for surfaces */
     --color-border: #333333;
-    --color-subtle: #A1A1AA;
+    --color-subtle: #a1a1aa;
 
     /* Swap Inverse Tokens */
-    --color-inv-canvas: #FFFFFF; /* White background on hover in dark mode */
-    --color-inv-ink: #000000;    /* Black text on hover in dark mode */
+    --color-inv-canvas: #ffffff; /* White background on hover in dark mode */
+    --color-inv-ink: #000000; /* Black text on hover in dark mode */
   }
-
-
 
   html {
     scroll-behavior: smooth;
@@ -63,24 +61,49 @@
 
 @layer components {
   /* Theme Utilities (mapping variables to Tailwind-like classes) */
-  .bg-canvas { background-color: var(--color-canvas); }
-  .bg-surface { background-color: var(--color-surface); }
-  .bg-border-line { background-color: var(--color-border); }
-  .bg-ink { background-color: var(--color-ink); }
-  .bg-inv-ink { background-color: var(--color-inv-ink); }
-  
-  .text-ink { color: var(--color-ink); }
-  .text-canvas { color: var(--color-canvas); }
-  .text-subtle { color: var(--color-subtle); }
-  
-  .border-ink { border-color: var(--color-ink); }
-  .border-border-line { border-color: var(--color-border); }
+  .bg-canvas {
+    background-color: var(--color-canvas);
+  }
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+  .bg-border-line {
+    background-color: var(--color-border);
+  }
+  .bg-ink {
+    background-color: var(--color-ink);
+  }
+  .bg-inv-ink {
+    background-color: var(--color-inv-ink);
+  }
+
+  .text-ink {
+    color: var(--color-ink);
+  }
+  .text-canvas {
+    color: var(--color-canvas);
+  }
+  .text-subtle {
+    color: var(--color-subtle);
+  }
+
+  .border-ink {
+    border-color: var(--color-ink);
+  }
+  .border-border-line {
+    border-color: var(--color-border);
+  }
 
   /* Brand Colors */
-  .bg-brand-neon { background-color: var(--color-brand-neon); }
-  .bg-brand-orange { background-color: var(--color-brand-orange); }
-  .text-brand-neon { color: var(--color-brand-neon); }
-
+  .bg-brand-neon {
+    background-color: var(--color-brand-neon);
+  }
+  .bg-brand-orange {
+    background-color: var(--color-brand-orange);
+  }
+  .text-brand-neon {
+    color: var(--color-brand-neon);
+  }
 
   /* Swiss Grid Utilities */
   .swiss-grid {
@@ -110,25 +133,38 @@
     @apply inline-flex items-center justify-center px-8 py-4 font-bold uppercase tracking-wider text-sm border transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-none;
     border-color: var(--color-ink);
     color: var(--color-ink);
-    &:hover {
-        background-color: var(--color-ink);
-        color: var(--color-canvas);
-    }
+  }
+
+  .btn-swiss:hover {
+    background-color: var(--color-ink);
+    color: var(--color-canvas);
   }
 
   .btn-swiss-primary {
     @apply border-transparent;
     background-color: var(--color-ink);
     color: var(--color-canvas);
-    &:hover {
-        background-color: var(--color-brand-neon);
-        color: #050505; /* Always black text ON neon */
-    }
+  }
+
+  .btn-swiss-primary:hover {
+    background-color: var(--color-brand-neon);
+    color: #050505; /* Always black text ON neon */
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

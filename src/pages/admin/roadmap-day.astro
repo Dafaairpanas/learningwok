@@ -1,0 +1,1017 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { Plus, ArrowLeft, Trash2, Save, Search } from "lucide-react";
+---
+
+<AdminLayout title="Edit Learning Day">
+  <div class="space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4 border-b border-ink pb-6">
+      <a
+        href="/admin/roadmap"
+        class="p-2 border-2 border-ink hover:bg-ink hover:text-canvas transition-colors"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </a>
+      <div class="flex-1">
+        <h2
+          id="page-title"
+          class="text-3xl font-black uppercase tracking-tighter text-ink"
+        >
+          Loading...
+        </h2>
+        <p id="page-subtitle" class="text-sm font-bold text-subtle mt-1">
+          Edit topics dan items untuk day ini
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          id="export-json-btn"
+          class="inline-flex items-center gap-2 border-2 border-ink bg-canvas px-4 py-3 text-sm font-bold uppercase tracking-widest text-ink hover:bg-surface transition-all"
+          title="Export Day ke JSON"
+        >
+          <svg
+            class="h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+            ></path><polyline points="7 10 12 15 17 10"></polyline><line
+              x1="12"
+              y1="15"
+              x2="12"
+              y2="3"></line></svg
+          >
+          Export
+        </button>
+        <label
+          class="inline-flex items-center gap-2 border-2 border-ink bg-canvas px-4 py-3 text-sm font-bold uppercase tracking-widest text-ink hover:bg-surface transition-all cursor-pointer"
+          title="Import Day dari JSON"
+        >
+          <svg
+            class="h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+            ></path><polyline points="17 8 12 3 7 8"></polyline><line
+              x1="12"
+              y1="3"
+              x2="12"
+              y2="15"></line></svg
+          >
+          Import
+          <input
+            type="file"
+            id="import-json-input"
+            accept=".json"
+            class="hidden"
+          />
+        </label>
+        <button
+          id="save-all-btn"
+          class="inline-flex items-center gap-2 border-2 border-ink bg-brand-neon px-6 py-3 text-sm font-bold uppercase tracking-widest text-ink hover:bg-brand-orange transition-all"
+        >
+          <Save className="h-4 w-4" />
+          Simpan
+        </button>
+      </div>
+    </div>
+
+    <!-- Day Info -->
+    <div id="day-info" class="bg-surface border border-ink p-6 animate-pulse">
+      <div class="h-6 bg-border-line w-1/3 mb-2"></div>
+      <div class="h-4 bg-border-line w-2/3"></div>
+    </div>
+
+    <!-- Topics Section -->
+    <div class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h3 class="text-2xl font-black uppercase tracking-tighter text-ink">
+          Topics
+        </h3>
+        <button
+          id="add-topic-btn"
+          class="inline-flex items-center gap-2 border-2 border-ink bg-canvas px-4 py-2 text-sm font-bold uppercase tracking-widest text-ink hover:bg-surface transition-all"
+        >
+          <Plus className="h-4 w-4" />
+          Tambah Topic
+        </button>
+      </div>
+
+      <div id="topics-container" class="space-y-6">
+        <div class="text-center text-subtle py-12 animate-pulse">
+          Loading topics...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Add Topic -->
+  <div
+    id="topic-modal"
+    class="fixed inset-0 z-50 hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      id="topic-modal-backdrop"
+      class="fixed inset-0 bg-ink/80 backdrop-blur-sm"
+    >
+    </div>
+    <div class="flex min-h-screen items-center justify-center px-4 pt-4 pb-20">
+      <div
+        class="relative bg-canvas border-2 border-ink w-full max-w-md shadow-2xl"
+      >
+        <div class="bg-brand-neon p-4 border-b-2 border-ink">
+          <h3
+            id="topic-modal-title"
+            class="text-xl font-black uppercase tracking-tighter text-ink"
+          >
+            TAMBAH TOPIC
+          </h3>
+        </div>
+        <form id="topic-form" class="p-6 space-y-4">
+          <input type="hidden" id="topic-id" />
+          <div>
+            <label
+              for="topic-title"
+              class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+              >Judul Topic</label
+            >
+            <input
+              type="text"
+              id="topic-title"
+              required
+              class="w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none"
+              placeholder="Kanji Harian"
+            />
+          </div>
+          <div>
+            <label
+              for="topic-type"
+              class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+              >Tipe Konten</label
+            >
+            <select
+              id="topic-type"
+              required
+              class="w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none"
+            >
+              <option value="kanji">Kanji</option>
+              <option value="kosakata">Kosakata</option>
+              <option value="bunpo">Bunpo</option>
+            </select>
+          </div>
+          <div class="flex gap-4 pt-4">
+            <button
+              type="button"
+              id="topic-cancel-btn"
+              class="flex-1 border-2 border-border-line py-3 text-sm font-bold uppercase hover:bg-surface transition-colors"
+              >Batal</button
+            >
+            <button
+              type="submit"
+              class="flex-1 border-2 border-ink bg-ink text-canvas py-3 text-sm font-bold uppercase hover:bg-brand-orange hover:text-ink transition-colors"
+              >Simpan</button
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Item Picker -->
+  <div
+    id="item-picker-modal"
+    class="fixed inset-0 z-50 hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      id="item-picker-backdrop"
+      class="fixed inset-0 bg-ink/80 backdrop-blur-sm"
+    >
+    </div>
+    <div class="flex min-h-screen items-center justify-center px-4 pt-4 pb-20">
+      <div
+        class="relative bg-canvas border-2 border-ink w-full max-w-2xl shadow-2xl max-h-[80vh] flex flex-col"
+      >
+        <div
+          class="bg-brand-neon p-4 border-b-2 border-ink flex items-center justify-between"
+        >
+          <h3
+            id="item-picker-title"
+            class="text-xl font-black uppercase tracking-tighter text-ink"
+          >
+            PILIH ITEM
+          </h3>
+          <button
+            id="item-picker-close"
+            class="p-1 hover:bg-ink hover:text-canvas transition-colors"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              ><line x1="18" y1="6" x2="6" y2="18"></line><line
+                x1="6"
+                y1="6"
+                x2="18"
+                y2="18"></line></svg
+            >
+          </button>
+        </div>
+        <div class="p-4 border-b border-border-line">
+          <input
+            type="text"
+            id="item-picker-search"
+            class="w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none"
+            placeholder="Cari..."
+          />
+        </div>
+        <div id="item-picker-list" class="flex-1 overflow-y-auto p-4">
+          <div class="text-center text-subtle py-8">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Note Editor -->
+  <div
+    id="note-modal"
+    class="fixed inset-0 z-50 hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      id="note-modal-backdrop"
+      class="fixed inset-0 bg-ink/80 backdrop-blur-sm"
+    >
+    </div>
+    <div class="flex min-h-screen items-center justify-center px-4 pt-4 pb-20">
+      <div
+        class="relative bg-canvas border-2 border-ink w-full max-w-2xl shadow-2xl"
+      >
+        <div class="bg-brand-orange p-4 border-b-2 border-ink">
+          <h3
+            id="note-modal-title"
+            class="text-xl font-black uppercase tracking-tighter text-ink"
+          >
+            EDIT SENSEI NOTE
+          </h3>
+        </div>
+        <form id="note-form" class="p-6 space-y-4">
+          <input type="hidden" id="note-item-id" />
+          <input type="hidden" id="note-item-type" />
+          <div>
+            <label
+              for="note-content"
+              class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+              >Sensei Note (Markdown)</label
+            >
+            <textarea
+              id="note-content"
+              rows="12"
+              class="w-full border-2 border-border-line bg-surface p-3 font-mono text-sm focus:border-ink focus:outline-none"
+              placeholder="## Tips Menghafal
+
+**Onyomi:** サン — dipakai dalam kata gabungan.
+
+**Kunyomi:** み — dipakai saat berdiri sendiri."
+            ></textarea>
+            <p class="text-xs text-subtle mt-2">
+              Gunakan format Markdown. Contoh: **bold**, *italic*, ## heading
+            </p>
+          </div>
+          <div class="flex gap-4 pt-4">
+            <button
+              type="button"
+              id="note-cancel-btn"
+              class="flex-1 border-2 border-border-line py-3 text-sm font-bold uppercase hover:bg-surface transition-colors"
+              >Batal</button
+            >
+            <button
+              type="submit"
+              class="flex-1 border-2 border-ink bg-ink text-canvas py-3 text-sm font-bold uppercase hover:bg-brand-orange hover:text-ink transition-colors"
+              >Simpan Note</button
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+  import { adminService } from "../../services/admin";
+
+  // Get day ID from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const dayId = urlParams.get("id");
+
+  if (!dayId) {
+    window.location.href = "/admin/roadmap";
+  }
+
+  interface TopicItem {
+    id: string;
+    note: string | null;
+    sort_order: number;
+    kanji?: { id: string; character: string; meaning: string };
+    kosakata?: { id: string; kanji: string; hiragana: string; meaning: string };
+    bunpo?: { id: string; pattern: string; meaning: string };
+  }
+
+  interface Topic {
+    id: string;
+    title: string;
+    content_type: "kanji" | "kosakata" | "bunpo";
+    sort_order: number;
+    kanji_items?: TopicItem[];
+    kosakata_items?: TopicItem[];
+    bunpo_items?: TopicItem[];
+  }
+
+  interface DayDetail {
+    id: string;
+    jlpt_level: string;
+    day_number: number;
+    title: string;
+    description: string | null;
+    estimated_minutes: number;
+    is_review_day: boolean;
+    topics: Topic[];
+  }
+
+  let dayData: DayDetail | null = null;
+  let currentTopicId: string | null = null;
+  let currentTopicType: "kanji" | "kosakata" | "bunpo" | null = null;
+
+  // DOM Elements
+  const pageTitle = document.getElementById("page-title");
+  const pageSubtitle = document.getElementById("page-subtitle");
+  const dayInfoEl = document.getElementById("day-info");
+  const topicsContainer = document.getElementById("topics-container");
+
+  // Topic Modal
+  const topicModal = document.getElementById("topic-modal");
+  const topicForm = document.getElementById("topic-form") as HTMLFormElement;
+  const topicIdInput = document.getElementById("topic-id") as HTMLInputElement;
+  const topicTitleInput = document.getElementById(
+    "topic-title",
+  ) as HTMLInputElement;
+  const topicTypeInput = document.getElementById(
+    "topic-type",
+  ) as HTMLSelectElement;
+  const topicModalTitle = document.getElementById("topic-modal-title");
+  const addTopicBtn = document.getElementById("add-topic-btn");
+  const topicCancelBtn = document.getElementById("topic-cancel-btn");
+  const topicBackdrop = document.getElementById("topic-modal-backdrop");
+
+  // Item Picker Modal
+  const itemPickerModal = document.getElementById("item-picker-modal");
+  const itemPickerTitle = document.getElementById("item-picker-title");
+  const itemPickerList = document.getElementById("item-picker-list");
+  const itemPickerSearch = document.getElementById(
+    "item-picker-search",
+  ) as HTMLInputElement;
+  const itemPickerClose = document.getElementById("item-picker-close");
+  const itemPickerBackdrop = document.getElementById("item-picker-backdrop");
+
+  async function loadDayData() {
+    if (!dayId) return;
+
+    try {
+      const data = await adminService.getLearningDayById(dayId);
+      dayData = data as DayDetail;
+
+      if (pageTitle)
+        pageTitle.textContent = `${dayData.jlpt_level} Day ${dayData.day_number}`;
+      if (pageSubtitle) pageSubtitle.textContent = dayData.title;
+
+      renderDayInfo();
+      renderTopics();
+    } catch (err) {
+      console.error(err);
+      if (topicsContainer)
+        topicsContainer.innerHTML = `<div class="text-red-600 font-bold text-center py-8">Failed to load data</div>`;
+    }
+  }
+
+  function renderDayInfo() {
+    if (!dayData || !dayInfoEl) return;
+
+    dayInfoEl.innerHTML = `
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-subtle block">Level</span>
+          <span class="text-lg font-black text-ink">${dayData.jlpt_level}</span>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase text-subtle block">Day</span>
+          <span class="text-lg font-black text-ink">${dayData.day_number}</span>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase text-subtle block">Durasi</span>
+          <span class="text-lg font-black text-ink">${dayData.estimated_minutes} menit</span>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase text-subtle block">Tipe</span>
+          <span class="text-lg font-black ${dayData.is_review_day ? "text-brand-orange" : "text-ink"}">${dayData.is_review_day ? "Review Day" : "Regular"}</span>
+        </div>
+      </div>
+      ${dayData.description ? `<p class="mt-4 text-subtle">${dayData.description}</p>` : ""}
+    `;
+    dayInfoEl.classList.remove("animate-pulse");
+  }
+
+  function renderTopics() {
+    if (!dayData || !topicsContainer) return;
+
+    if (!dayData.topics || dayData.topics.length === 0) {
+      topicsContainer.innerHTML = `<div class="text-center text-subtle py-12 border-2 border-dashed border-border-line">Belum ada topic. Klik "Tambah Topic" untuk memulai.</div>`;
+      return;
+    }
+
+    // Sort topics
+    const sortedTopics = [...dayData.topics].sort(
+      (a, b) => a.sort_order - b.sort_order,
+    );
+
+    topicsContainer.innerHTML = sortedTopics
+      .map((topic) => {
+        const items = getTopicItems(topic);
+        const typeLabel =
+          topic.content_type === "kanji"
+            ? "漢"
+            : topic.content_type === "kosakata"
+              ? "語"
+              : "文";
+        const typeColor =
+          topic.content_type === "kanji"
+            ? "bg-brand-neon"
+            : topic.content_type === "kosakata"
+              ? "bg-brand-blue text-white"
+              : "bg-brand-purple text-white";
+
+        return `
+          <div class="border-2 border-ink bg-canvas" data-topic-id="${topic.id}">
+            <div class="flex items-center justify-between p-4 bg-surface border-b border-ink">
+              <div class="flex items-center gap-3">
+                <span class="w-10 h-10 flex items-center justify-center font-jp text-xl font-bold ${typeColor}">${typeLabel}</span>
+                <div>
+                  <h4 class="font-bold text-ink">${topic.title}</h4>
+                  <span class="text-xs text-subtle">${items.length} items</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="add-item-btn p-2 border border-ink hover:bg-brand-neon transition-colors" data-topic-id="${topic.id}" data-type="${topic.content_type}" title="Add Item">
+                  <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <button class="delete-topic-btn p-2 border border-transparent hover:border-red-600 hover:bg-red-50 text-subtle hover:text-red-600 transition-all" data-topic-id="${topic.id}" title="Delete Topic">
+                  <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </div>
+            <div class="p-4 space-y-2">
+              ${
+                items.length === 0
+                  ? '<div class="text-center text-subtle py-4 text-sm">Tidak ada item. Klik + untuk menambah.</div>'
+                  : items
+                      .map((item, idx) => {
+                        const display = getItemDisplay(
+                          item,
+                          topic.content_type,
+                        );
+                        const hasNote =
+                          item.note && item.note.trim().length > 0;
+                        const notePreview = hasNote
+                          ? item.note!.substring(0, 50) +
+                            (item.note!.length > 50 ? "..." : "")
+                          : "";
+                        return `
+                          <div class="flex items-start gap-3 p-3 bg-surface border border-border-line group hover:border-ink transition-colors">
+                            <span class="w-6 h-6 flex items-center justify-center bg-ink text-canvas text-xs font-bold flex-shrink-0 mt-1">${idx + 1}</span>
+                            <div class="flex-1 min-w-0">
+                              <div class="flex items-center gap-2">
+                                <span class="font-jp font-bold text-ink">${display.main}</span>
+                                <span class="text-subtle">${display.sub}</span>
+                              </div>
+                              ${hasNote ? `<div class="text-xs text-brand-orange mt-1 truncate" title="${item.note?.replace(/"/g, "&quot;")}">📝 ${notePreview.replace(/</g, "&lt;")}</div>` : '<div class="text-xs text-subtle/50 mt-1">No sensei note</div>'}
+                            </div>
+                            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                              <button class="edit-note-btn p-1 text-brand-orange hover:bg-brand-orange/10 transition-all" data-item-id="${item.id}" data-type="${topic.content_type}" data-note="${item.note?.replace(/"/g, "&quot;") || ""}" title="Edit Note">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                              </button>
+                              <button class="remove-item-btn p-1 text-red-500 hover:bg-red-50 transition-all" data-item-id="${item.id}" data-type="${topic.content_type}" title="Remove">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                              </button>
+                            </div>
+                          </div>
+                        `;
+                      })
+                      .join("")
+              }
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    // Attach event listeners
+    document.querySelectorAll(".add-item-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const el = e.currentTarget as HTMLElement;
+        currentTopicId = el.dataset.topicId || null;
+        currentTopicType = el.dataset.type as any;
+        openItemPicker();
+      });
+    });
+
+    document.querySelectorAll(".delete-topic-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const topicId = (e.currentTarget as HTMLElement).dataset.topicId;
+        if (topicId && confirm("Hapus topic ini?")) {
+          await adminService.deleteTopic(topicId);
+          loadDayData();
+        }
+      });
+    });
+
+    document.querySelectorAll(".remove-item-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const el = e.currentTarget as HTMLElement;
+        const itemId = el.dataset.itemId;
+        const type = el.dataset.type;
+        if (!itemId || !type) return;
+
+        try {
+          if (type === "kanji") await adminService.removeKanjiFromTopic(itemId);
+          else if (type === "kosakata")
+            await adminService.removeKosakataFromTopic(itemId);
+          else if (type === "bunpo")
+            await adminService.removeBunpoFromTopic(itemId);
+          loadDayData();
+        } catch (err) {
+          alert("Error: " + (err as Error).message);
+        }
+      });
+    });
+
+    // Edit Note buttons
+    document.querySelectorAll(".edit-note-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const el = e.currentTarget as HTMLElement;
+        const itemId = el.dataset.itemId || "";
+        const type = el.dataset.type || "";
+        const note = el.dataset.note || "";
+        openNoteModal(itemId, type, note);
+      });
+    });
+  }
+
+  function getTopicItems(topic: Topic): TopicItem[] {
+    if (topic.content_type === "kanji") return topic.kanji_items || [];
+    if (topic.content_type === "kosakata") return topic.kosakata_items || [];
+    if (topic.content_type === "bunpo") return topic.bunpo_items || [];
+    return [];
+  }
+
+  function getItemDisplay(
+    item: TopicItem,
+    type: string,
+  ): { main: string; sub: string } {
+    if (type === "kanji" && item.kanji) {
+      return { main: item.kanji.character, sub: item.kanji.meaning };
+    }
+    if (type === "kosakata" && item.kosakata) {
+      return { main: item.kosakata.kanji, sub: item.kosakata.meaning };
+    }
+    if (type === "bunpo" && item.bunpo) {
+      return { main: item.bunpo.pattern, sub: item.bunpo.meaning };
+    }
+    return { main: "?", sub: "" };
+  }
+
+  // Topic Modal Handlers
+  addTopicBtn?.addEventListener("click", () => {
+    if (topicModal) topicModal.classList.remove("hidden");
+    if (topicModalTitle) topicModalTitle.textContent = "TAMBAH TOPIC";
+    topicForm?.reset();
+    topicIdInput.value = "";
+  });
+
+  topicCancelBtn?.addEventListener("click", () =>
+    topicModal?.classList.add("hidden"),
+  );
+  topicBackdrop?.addEventListener("click", () =>
+    topicModal?.classList.add("hidden"),
+  );
+
+  topicForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!dayId) return;
+
+    try {
+      const nextSortOrder = (dayData?.topics?.length || 0) + 1;
+      await adminService.createTopic({
+        learning_day_id: dayId,
+        title: topicTitleInput.value,
+        content_type: topicTypeInput.value as "kanji" | "kosakata" | "bunpo",
+        sort_order: nextSortOrder,
+      });
+      topicModal?.classList.add("hidden");
+      loadDayData();
+    } catch (err) {
+      alert("Error: " + (err as Error).message);
+    }
+  });
+
+  // Item Picker
+  let allItems: any[] = [];
+
+  async function openItemPicker() {
+    if (!currentTopicType) return;
+    itemPickerModal?.classList.remove("hidden");
+    if (itemPickerTitle)
+      itemPickerTitle.textContent = `PILIH ${currentTopicType.toUpperCase()}`;
+    if (itemPickerList)
+      itemPickerList.innerHTML = `<div class="text-center text-subtle py-8">Loading...</div>`;
+    itemPickerSearch.value = "";
+
+    try {
+      let data: any[] = [];
+      if (currentTopicType === "kanji") {
+        const { data: d } = await supabase
+          .from("kanji")
+          .select("id, character, meaning, jlpt_level")
+          .order("sort_id");
+        data = d || [];
+      } else if (currentTopicType === "kosakata") {
+        const { data: d } = await supabase
+          .from("kosakata")
+          .select("id, kanji, hiragana, meaning, jlpt_level")
+          .order("sort_id");
+        data = d || [];
+      } else if (currentTopicType === "bunpo") {
+        const { data: d } = await supabase
+          .from("bunpo")
+          .select("id, pattern, meaning, jlpt_level")
+          .order("sort_id");
+        data = d || [];
+      }
+      allItems = data;
+      renderItemPickerList(data);
+    } catch (err) {
+      if (itemPickerList)
+        itemPickerList.innerHTML = `<div class="text-red-600 font-bold text-center py-8">Failed to load</div>`;
+    }
+  }
+
+  function renderItemPickerList(items: any[]) {
+    if (!itemPickerList) return;
+    if (items.length === 0) {
+      itemPickerList.innerHTML = `<div class="text-center text-subtle py-8">Tidak ada item ditemukan</div>`;
+      return;
+    }
+
+    itemPickerList.innerHTML = items
+      .slice(0, 100) // Limit to 100 for performance
+      .map((item) => {
+        let display = "";
+        if (currentTopicType === "kanji") {
+          display = `<span class="font-jp text-2xl font-bold">${item.character}</span> <span class="text-subtle ml-2">${item.meaning}</span>`;
+        } else if (currentTopicType === "kosakata") {
+          display = `<span class="font-jp font-bold">${item.kanji}</span> <span class="text-subtle ml-2">${item.meaning}</span>`;
+        } else if (currentTopicType === "bunpo") {
+          display = `<span class="font-jp font-bold">${item.pattern}</span> <span class="text-subtle ml-2">${item.meaning}</span>`;
+        }
+        return `
+          <div class="picker-item flex items-center justify-between p-3 border border-border-line hover:border-ink hover:bg-surface cursor-pointer transition-colors mb-2" data-id="${item.id}">
+            <div>${display}</div>
+            <span class="text-xs font-bold text-subtle">${item.jlpt_level || ""}</span>
+          </div>
+        `;
+      })
+      .join("");
+
+    document.querySelectorAll(".picker-item").forEach((el) => {
+      el.addEventListener("click", async () => {
+        const itemId = (el as HTMLElement).dataset.id;
+        if (!itemId || !currentTopicId || !currentTopicType) return;
+
+        try {
+          const nextSort = getNextSortOrder();
+          if (currentTopicType === "kanji") {
+            await adminService.addKanjiToTopic(
+              currentTopicId,
+              itemId,
+              undefined,
+              nextSort,
+            );
+          } else if (currentTopicType === "kosakata") {
+            await adminService.addKosakataToTopic(
+              currentTopicId,
+              itemId,
+              undefined,
+              nextSort,
+            );
+          } else if (currentTopicType === "bunpo") {
+            await adminService.addBunpoToTopic(
+              currentTopicId,
+              itemId,
+              undefined,
+              nextSort,
+            );
+          }
+          itemPickerModal?.classList.add("hidden");
+          loadDayData();
+        } catch (err) {
+          alert("Error: " + (err as Error).message);
+        }
+      });
+    });
+  }
+
+  function getNextSortOrder(): number {
+    if (!dayData || !currentTopicId) return 1;
+    const topic = dayData.topics.find((t) => t.id === currentTopicId);
+    if (!topic) return 1;
+    const items = getTopicItems(topic);
+    return items.length + 1;
+  }
+
+  itemPickerSearch?.addEventListener("input", () => {
+    const term = itemPickerSearch.value.toLowerCase();
+    const filtered = allItems.filter((item) => {
+      if (currentTopicType === "kanji") {
+        return (
+          item.character.includes(term) ||
+          item.meaning.toLowerCase().includes(term)
+        );
+      } else if (currentTopicType === "kosakata") {
+        return (
+          item.kanji.includes(term) ||
+          item.hiragana.includes(term) ||
+          item.meaning.toLowerCase().includes(term)
+        );
+      } else if (currentTopicType === "bunpo") {
+        return (
+          item.pattern.includes(term) ||
+          item.meaning.toLowerCase().includes(term)
+        );
+      }
+      return false;
+    });
+    renderItemPickerList(filtered);
+  });
+
+  itemPickerClose?.addEventListener("click", () =>
+    itemPickerModal?.classList.add("hidden"),
+  );
+  itemPickerBackdrop?.addEventListener("click", () =>
+    itemPickerModal?.classList.add("hidden"),
+  );
+
+  // ============================================
+  // Note Modal Handlers
+  // ============================================
+  const noteModal = document.getElementById("note-modal");
+  const noteForm = document.getElementById("note-form") as HTMLFormElement;
+  const noteItemIdInput = document.getElementById(
+    "note-item-id",
+  ) as HTMLInputElement;
+  const noteItemTypeInput = document.getElementById(
+    "note-item-type",
+  ) as HTMLInputElement;
+  const noteContentInput = document.getElementById(
+    "note-content",
+  ) as HTMLTextAreaElement;
+  const noteCancelBtn = document.getElementById("note-cancel-btn");
+  const noteBackdrop = document.getElementById("note-modal-backdrop");
+
+  function openNoteModal(itemId: string, type: string, existingNote: string) {
+    if (noteModal) noteModal.classList.remove("hidden");
+    noteItemIdInput.value = itemId;
+    noteItemTypeInput.value = type;
+    noteContentInput.value = existingNote;
+  }
+
+  noteCancelBtn?.addEventListener("click", () =>
+    noteModal?.classList.add("hidden"),
+  );
+  noteBackdrop?.addEventListener("click", () =>
+    noteModal?.classList.add("hidden"),
+  );
+
+  noteForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const itemId = noteItemIdInput.value;
+    const type = noteItemTypeInput.value;
+    const note = noteContentInput.value;
+
+    try {
+      if (type === "kanji") {
+        await adminService.updateKanjiNote(itemId, note);
+      } else if (type === "kosakata") {
+        await adminService.updateKosakataNote(itemId, note);
+      } else if (type === "bunpo") {
+        await adminService.updateBunpoNote(itemId, note);
+      }
+      noteModal?.classList.add("hidden");
+      loadDayData();
+    } catch (err) {
+      alert("Error saving note: " + (err as Error).message);
+    }
+  });
+
+  // ============================================
+  // Export/Import JSON Handlers
+  // ============================================
+  const exportJsonBtn = document.getElementById("export-json-btn");
+  const importJsonInput = document.getElementById(
+    "import-json-input",
+  ) as HTMLInputElement;
+
+  // Export current day to JSON
+  exportJsonBtn?.addEventListener("click", () => {
+    if (!dayData) {
+      alert("Data belum dimuat!");
+      return;
+    }
+
+    // Build clean export structure
+    const exportData = {
+      _meta: {
+        exportedAt: new Date().toISOString(),
+        version: "1.0",
+        type: "roadmap_day",
+      },
+      day: {
+        jlpt_level: dayData.jlpt_level,
+        day_number: dayData.day_number,
+        title: dayData.title,
+        description: dayData.description,
+        estimated_minutes: dayData.estimated_minutes,
+        is_review_day: dayData.is_review_day,
+      },
+      topics: dayData.topics.map((topic) => ({
+        title: topic.title,
+        content_type: topic.content_type,
+        sort_order: topic.sort_order,
+        items: getTopicItems(topic).map((item, idx) => {
+          const baseItem: any = {
+            sort_order: item.sort_order || idx + 1,
+            note: item.note,
+          };
+
+          if (topic.content_type === "kanji" && item.kanji) {
+            baseItem.ref_id = item.kanji.id;
+            baseItem.character = item.kanji.character;
+            baseItem.meaning = item.kanji.meaning;
+          } else if (topic.content_type === "kosakata" && item.kosakata) {
+            baseItem.ref_id = item.kosakata.id;
+            baseItem.kanji = item.kosakata.kanji;
+            baseItem.hiragana = item.kosakata.hiragana;
+            baseItem.meaning = item.kosakata.meaning;
+          } else if (topic.content_type === "bunpo" && item.bunpo) {
+            baseItem.ref_id = item.bunpo.id;
+            baseItem.pattern = item.bunpo.pattern;
+            baseItem.meaning = item.bunpo.meaning;
+          }
+
+          return baseItem;
+        }),
+      })),
+    };
+
+    // Download as JSON file
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `roadmap_${dayData.jlpt_level}_day${dayData.day_number}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // Import from JSON file
+  importJsonInput?.addEventListener("change", async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const importData = JSON.parse(text);
+
+      // Validate structure
+      if (!importData._meta || importData._meta.type !== "roadmap_day") {
+        alert("Invalid JSON format! Harus export dari halaman ini.");
+        return;
+      }
+
+      if (!importData.topics || !Array.isArray(importData.topics)) {
+        alert("Invalid JSON: topics tidak ditemukan.");
+        return;
+      }
+
+      // Confirm import
+      const existingTopicsCount = dayData?.topics?.length || 0;
+      const confirm1 = confirm(
+        `Import ${importData.topics.length} topics dengan total ${importData.topics.reduce((sum: number, t: any) => sum + (t.items?.length || 0), 0)} items?\n\n⚠️ PERHATIAN: Ini akan MENGHAPUS ${existingTopicsCount} topics yang sudah ada dan MENGGANTI dengan data dari JSON.`,
+      );
+      if (!confirm1) return;
+
+      // Delete existing topics first
+      if (dayData?.topics) {
+        for (const existingTopic of dayData.topics) {
+          try {
+            await adminService.deleteTopic(existingTopic.id);
+          } catch (delErr) {
+            console.warn("Failed to delete topic:", existingTopic.id, delErr);
+          }
+        }
+      }
+
+      // Import topics and items
+      for (const topicData of importData.topics) {
+        // Create topic
+        const newTopic = await adminService.createTopic({
+          learning_day_id: dayId!,
+          title: topicData.title,
+          content_type: topicData.content_type,
+          sort_order: topicData.sort_order,
+        });
+
+        // Add items
+        if (topicData.items && Array.isArray(topicData.items)) {
+          for (const itemData of topicData.items) {
+            if (!itemData.ref_id) continue; // Skip items without ref_id
+
+            try {
+              if (topicData.content_type === "kanji") {
+                await adminService.addKanjiToTopic(
+                  newTopic.id,
+                  itemData.ref_id,
+                  itemData.note,
+                  itemData.sort_order,
+                );
+              } else if (topicData.content_type === "kosakata") {
+                await adminService.addKosakataToTopic(
+                  newTopic.id,
+                  itemData.ref_id,
+                  itemData.note,
+                  itemData.sort_order,
+                );
+              } else if (topicData.content_type === "bunpo") {
+                await adminService.addBunpoToTopic(
+                  newTopic.id,
+                  itemData.ref_id,
+                  itemData.note,
+                  itemData.sort_order,
+                );
+              }
+            } catch (itemErr) {
+              console.warn("Failed to add item:", itemData, itemErr);
+            }
+          }
+        }
+      }
+
+      alert("Import berhasil!");
+      loadDayData();
+    } catch (err) {
+      alert("Error importing JSON: " + (err as Error).message);
+    }
+
+    // Reset input
+    importJsonInput.value = "";
+  });
+
+  // ============================================
+  // Save All Button Handler
+  // ============================================
+  const saveAllBtn = document.getElementById("save-all-btn");
+  saveAllBtn?.addEventListener("click", () => {
+    // All changes are saved automatically via API calls
+    // This button just provides feedback and redirects
+    alert("Semua perubahan sudah tersimpan!");
+    window.location.href = "/admin/roadmap";
+  });
+
+  // Init
+  loadDayData();
+</script>

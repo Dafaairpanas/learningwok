@@ -8,8 +8,8 @@ const { currentPath } = Astro.props;
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/kanji", label: "Kanji" },
-  { href: "/kosakata", label: "Kosakata" },
-  { href: "/bunpo", label: "Bunpo (文法)" },
+  { href: "/kosakata", label: "Kotoba" },
+  { href: "/bunpo", label: "Bunpo" },
   { href: "/roadmap", label: "Roadmap" },
 ];
 
@@ -24,12 +24,20 @@ import ThemeToggle from "../ThemeToggle.astro";
   class="sticky top-0 z-50 w-full bg-canvas/90 backdrop-blur-md border-b border-border-line transition-colors duration-300"
 >
   <div
-    class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
+    class="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
   >
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 group">
-      <span class="text-2xl group-hover:scale-110 transition-transform">🎌</span
-      >
+      <img
+        src="/logo-light.png"
+        alt="Nihongoin Logo"
+        class="w-12 h-12 group-hover:scale-110 transition-transform dark:hidden"
+      />
+      <img
+        src="/logo-dark.png"
+        alt="Nihongoin Logo"
+        class="w-12 h-12 group-hover:scale-110 transition-transform hidden dark:block"
+      />
       <span class="font-display font-bold text-xl tracking-tighter text-ink">
         NIHONGO<span class="text-brand-orange">IN</span>
       </span>
@@ -79,21 +87,42 @@ import ThemeToggle from "../ThemeToggle.astro";
     </div>
   </div>
 
-  <!-- Mobile Navigation -->
+  <!-- Mobile Navigation Overlay -->
   <nav
     id="mobile-menu"
-    class="hidden border-b border-border-line bg-canvas px-4 py-4 md:hidden"
+    class="fixed inset-0 z-[100] h-screen w-screen hidden bg-canvas md:hidden transition-opacity duration-300 opacity-0"
   >
-    <div class="flex flex-col gap-2">
+    <!-- Close Button -->
+    <div class="flex justify-end p-4">
+      <button
+        id="mobile-menu-close"
+        class="flex h-12 w-12 items-center justify-center border border-border-line bg-canvas text-ink hover:bg-surface transition-colors"
+        aria-label="Close menu"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="flex flex-col gap-2 px-6">
       {
         navLinks.map((link) => (
           <a
             href={link.href}
             class:list={[
-              "px-4 py-3 text-sm font-bold uppercase tracking-wide transition-colors",
+              "px-4 py-4 text-2xl font-black uppercase tracking-tighter border-b border-border-line/50 transition-colors",
               isActive(link.href, currentPath)
-                ? "bg-inv-canvas text-inv-ink"
-                : "text-subtle hover:bg-inv-canvas hover:text-inv-ink",
+                ? "text-brand-neon"
+                : "text-ink hover:text-brand-neon",
             ]}
           >
             {link.label}
@@ -107,8 +136,31 @@ import ThemeToggle from "../ThemeToggle.astro";
 <script>
   const menuBtn = document.getElementById("mobile-menu-btn");
   const mobileMenu = document.getElementById("mobile-menu");
+  const closeBtn = document.getElementById("mobile-menu-close");
+
+  function openMenu() {
+    mobileMenu?.classList.remove("hidden");
+    setTimeout(() => {
+      mobileMenu?.classList.remove("opacity-0");
+      mobileMenu?.classList.add("opacity-100");
+    }, 10);
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMenu() {
+    mobileMenu?.classList.remove("opacity-100");
+    mobileMenu?.classList.add("opacity-0");
+    setTimeout(() => {
+      mobileMenu?.classList.add("hidden");
+      document.body.style.overflow = "";
+    }, 300);
+  }
 
   menuBtn?.addEventListener("click", () => {
-    mobileMenu?.classList.toggle("hidden");
+    const isHidden = mobileMenu?.classList.contains("hidden");
+    if (isHidden) openMenu();
+    else closeMenu();
   });
+
+  closeBtn?.addEventListener("click", closeMenu);
 </script>

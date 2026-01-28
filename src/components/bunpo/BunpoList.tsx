@@ -19,26 +19,9 @@ const jlptOptions = [
   { value: 'N3', label: 'JLPT N3' },
 ];
 
-const typeOptions = [
-  { value: 'all', label: 'Semua Tipe' },
-  { value: 'grammar', label: 'Tata Bahasa' },
-  { value: 'pola', label: 'Pola Kalimat' },
-];
-
-const categoryOptions = [
-  { value: 'all', label: 'Semua Kategori' },
-  { value: 'particles', label: 'Partikel' },
-  { value: 'conjugation', label: 'Konjugasi' },
-  { value: 'expressions', label: 'Ungkapan' },
-  { value: 'time', label: 'Waktu' },
-  { value: 'actions', label: 'Aksi' },
-];
-
 export default function BunpoList({ initialBunpo }: BunpoListProps) {
   const [search, setSearch] = useState('');
   const [jlptLevel, setJlptLevel] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [category, setCategory] = useState('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
@@ -58,17 +41,8 @@ export default function BunpoList({ initialBunpo }: BunpoListProps) {
       result = result.filter((item) => item.jlpt_level === jlptLevel);
     }
 
-    if (typeFilter !== 'all') {
-      const dbType = typeFilter === 'pola' ? 'sentence_pattern' : typeFilter;
-      result = result.filter((item) => item.bunpo_type === dbType);
-    }
-
-    if (category !== 'all') {
-      result = result.filter((item) => item.categories?.slug === category);
-    }
-
     return result;
-  }, [initialBunpo, search, jlptLevel, typeFilter, category]);
+  }, [initialBunpo, search, jlptLevel]);
 
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
   const paginatedData = filteredData.slice(
@@ -84,7 +58,7 @@ export default function BunpoList({ initialBunpo }: BunpoListProps) {
     <div className="space-y-0">
        {/* Filters */}
       <div className="border-b border-border-line bg-canvas p-6">
-        <div className="max-w-7xl mx-auto grid gap-4 md:grid-cols-3">
+        <div className="max-w-7xl mx-auto grid gap-4 md:grid-cols-2">
           <Input
             placeholder="Cari bunpo..."
             value={search}
@@ -99,22 +73,6 @@ export default function BunpoList({ initialBunpo }: BunpoListProps) {
             value={jlptLevel}
             onChange={(e) => {
               setJlptLevel(e.target.value);
-              handleFilterChange();
-            }}
-          />
-          <Select
-            options={typeOptions}
-            value={typeFilter}
-            onChange={(e) => {
-              setTypeFilter(e.target.value);
-              handleFilterChange();
-            }}
-          />
-          <Select
-            options={categoryOptions}
-            value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
               handleFilterChange();
             }}
           />
