@@ -7,6 +7,7 @@ import Footer from "../components/layout/Footer.astro";
 interface Props {
   title: string;
   description?: string;
+  image?: string;
 }
 
 const {
@@ -36,10 +37,13 @@ const currentPath = Astro.url.pathname;
       name="title"
       content={`${title} | Nihongoin - Belajar Bahasa Jepang Otodidak`}
     />
-    <meta name="description" content={description} />
     <meta
       name="keywords"
       content="Belajar bahasa jepang otodidak, Belajar bahasa jepang, Belajar JLPT, Belajar JLPT N5, Belajar JLPT N4, Kamus Bahasa Jepang, Kanji N5, Bunpo N5"
+    />
+    <meta
+      name="google-site-verification"
+      content="db6FLAblf4X_uUvz2L63fgEndfxXGYCfIFHe52FdQjc"
     />
 
     <!-- Open Graph / Facebook -->
