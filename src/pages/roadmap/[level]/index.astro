@@ -1,0 +1,138 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { roadmapService } from "../../../services/roadmap";
+import { Trophy, ArrowRight, Clock, Calendar, ChevronLeft } from "lucide-react";
+
+// Generate static paths for all JLPT levels
+export async function getStaticPaths() {
+  return [
+    { params: { level: "N5" } },
+    { params: { level: "N4" } },
+    { params: { level: "N3" } },
+    { params: { level: "N2" } },
+    { params: { level: "N1" } },
+  ];
+}
+
+const { level } = Astro.params;
+const targetLevel = level?.toUpperCase() || "N5";
+
+// Static generation - fetch at build time
+const days = await roadmapService.getRoadmapList();
+const levelDays = days.filter((d) => d.jlpt_level === targetLevel);
+
+// Helper to chunk days into weeks
+const chunkByWeek = (list: typeof days) => {
+  const weeks = [];
+  for (let i = 0; i < list.length; i += 7) {
+    weeks.push(list.slice(i, i + 7));
+  }
+  return weeks;
+};
+
+const weeks = chunkByWeek(levelDays);
+
+const title = `Roadmap Belajar ${targetLevel}`;
+const description = `Kurikulum harian untuk penguasaan JLPT ${targetLevel}.`;
+const colorClass = targetLevel === "N5" ? "bg-brand-neon" : "bg-brand-orange";
+---
+
+<Layout title={title}>
+  <section class="py-12 lg:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Back Button -->
+      <a
+        href="/roadmap"
+        class="inline-flex items-center gap-2 mb-8 text-sm font-bold uppercase tracking-widest text-subtle hover:text-ink transition-colors group"
+      >
+        <ChevronLeft
+          className="w-4 h-4 group-hover:-translate-x-1 transition-transform"
+        />
+        Kembali ke Pilihan Level
+      </a>
+
+      <!-- Header -->
+      <div class="flex items-end gap-6 mb-12 border-b-2 border-ink pb-6">
+        <div
+          class={`flex h-20 w-20 items-center justify-center border border-ink ${colorClass} text-ink`}
+        >
+          <span class="text-3xl font-black">{targetLevel}</span>
+        </div>
+        <div>
+          <h1
+            class="text-5xl md:text-6xl font-black uppercase tracking-tight text-ink mb-2"
+          >
+            {targetLevel} Roadmap
+          </h1>
+          <p class="text-xl text-subtle font-medium">
+            Target: {
+              levelDays.length > 0 ? `${levelDays.length} Hari` : "Segera Hadir"
+            }
+          </p>
+        </div>
+      </div>
+
+      <!-- Roadmap List -->
+      <div class="space-y-16">
+        {
+          weeks.length > 0 ? (
+            weeks.map((weekDays, index) => (
+              <div class="relative pl-8 border-l border-border-line">
+                <div class="absolute -left-3 top-0 flex items-center justify-center w-6 h-6 bg-canvas border border-ink">
+                  <div class="w-2 h-2 bg-ink" />
+                </div>
+
+                <div class="mb-8">
+                  <h3 class="text-2xl font-bold uppercase tracking-wide text-ink flex items-center gap-4">
+                    Week {index + 1}
+                    <span class="text-sm font-normal text-subtle normal-case tracking-normal border border-subtle px-2 py-0.5">
+                      Day {weekDays[0].day_number} -{" "}
+                      {weekDays[weekDays.length - 1].day_number}
+                    </span>
+                  </h3>
+                </div>
+
+                <div class="grid gap-px bg-border-line border border-border-line md:grid-cols-2 lg:grid-cols-3">
+                  {weekDays.map((day) => (
+                    <a
+                      href={`/roadmap/${day.jlpt_level}/${day.day_number}`}
+                      class="group relative flex flex-col justify-between bg-canvas p-8 hover:bg-surface transition-colors"
+                    >
+                      <div>
+                        <div class="mb-6 flex items-center justify-between">
+                          <span class="inline-flex items-center text-xs font-bold uppercase tracking-widest border border-ink px-2 py-1">
+                            Day {day.day_number}
+                          </span>
+                          <div class="flex items-center text-xs font-bold text-subtle uppercase tracking-wider">
+                            <Clock className="w-3.5 h-3.5 mr-1" />
+                            {day.estimated_minutes} min
+                          </div>
+                        </div>
+                        <h3 class="mb-3 text-xl font-bold text-ink group-hover:text-brand-orange transition-colors line-clamp-2">
+                          {day.title}
+                        </h3>
+                        <p class="text-sm text-subtle line-clamp-3 leading-relaxed">
+                          {day.description}
+                        </p>
+                      </div>
+
+                      <div class="mt-8 flex items-center text-sm font-bold uppercase tracking-widest text-ink opacity-0 transform translate-x-[-10px] transition-all group-hover:opacity-100 group-hover:translate-x-0">
+                        Start Lesson <ArrowRight className="ml-2 h-4 w-4" />
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div class="py-20 text-center bg-surface border border-dashed border-subtle">
+              <p class="text-subtle font-bold uppercase tracking-widest text-lg">
+                Konten untuk level ini belum tersedia.
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

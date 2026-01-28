@@ -1,0 +1,67 @@
+---
+import "../styles/global.css";
+// import Header from "../components/layout/Header.astro"; // I will check Header first
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Platform belajar bahasa Jepang dengan fokus JLPT N5-N3",
+} = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | Nihongoin</title>
+    <script is:inline>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+  </head>
+  <body
+    class="min-h-screen bg-canvas text-ink selection:bg-brand-neon selection:text-ink transition-colors duration-300"
+  >
+    <div
+      class="flex min-h-screen flex-col border-x border-border-line max-w-7xl mx-auto relative"
+    >
+      <Header currentPath={currentPath} />
+
+      <!-- Fallback if Header doesn't have slot -->
+      <!-- I will check Header.astro content next step to be sure, but for now I'll inject the script in head and leave the body as is, waiting to modify Header.astro -->
+      <main class="flex-1 bg-canvas border-b border-border-line">
+        <slot />
+      </main>
+      <Footer />
+
+      <!-- Floating Toggle Mobile (Optional, or integrate into Header) -->
+    </div>
+  </body>
+</html>

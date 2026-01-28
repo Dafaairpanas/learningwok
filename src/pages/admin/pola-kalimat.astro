@@ -1,0 +1,93 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { mockPolaKalimat } from "../../lib/mockData";
+import { Plus, Edit, Trash2 } from "lucide-react";
+
+const polaData = mockPolaKalimat;
+---
+
+<AdminLayout title="Kelola Pola Kalimat">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-ink">Daftar Pola Kalimat</h2>
+        <p class="text-sm text-subtle">Total: {polaData.length} pola</p>
+      </div>
+      <button
+        class="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent/90 dark:bg-accent-dark dark:hover:bg-accent-dark/90"
+      >
+        <Plus className="h-4 w-4" />
+        Tambah Pola Kalimat
+      </button>
+    </div>
+
+    <div
+      class="overflow-hidden rounded-2xl border border-border-line bg-canvas"
+    >
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="border-b border-border-line bg-surface">
+            <tr>
+              <th
+                class="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-subtle"
+                >Pola</th
+              >
+              <th
+                class="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-subtle"
+                >Arti</th
+              >
+              <th
+                class="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-subtle"
+                >Kategori</th
+              >
+              <th
+                class="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-subtle"
+                >Level</th
+              >
+              <th
+                class="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-subtle"
+                >Aksi</th
+              >
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border-line">
+            {
+              polaData.map((pola) => (
+                <tr class="hover:bg-surface">
+                  <td class="px-6 py-4 font-jp text-lg font-medium text-ink">
+                    {pola.pattern}
+                  </td>
+                  <td class="px-6 py-4 text-ink">{pola.meaning}</td>
+                  <td class="px-6 py-4 text-subtle">{pola.category || "-"}</td>
+                  <td class="px-6 py-4">
+                    <span
+                      class={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
+                        pola.jlpt_level === "N5"
+                          ? "bg-green-100 text-green-700"
+                          : pola.jlpt_level === "N4"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-purple-100 text-purple-700"
+                      }`}
+                    >
+                      {pola.jlpt_level}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center justify-end gap-2">
+                      <button class="rounded-lg p-2 text-blue-600 hover:bg-blue-50/50">
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button class="rounded-lg p-2 text-red-600 hover:bg-red-50/50">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

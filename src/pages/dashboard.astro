@@ -1,0 +1,84 @@
+---
+import SwissLayout from "../layouts/SwissLayout.astro";
+import BigKanjiCard from "../components/swiss/BigKanjiCard.astro";
+import VocabularyCard from "../components/swiss/VocabularyCard.astro";
+
+// Sample Data Mock (Day 14)
+const wordOfTheDay = {
+  kanji: "勉強",
+  romaji: "Benkyō",
+  meaning: "Study",
+  strokes: 8,
+  level: "N5",
+};
+
+const vocabList = [
+  { kanji: "電車", romaji: "Densha", type: "NOUN", isActive: true },
+  { kanji: "切符", romaji: "Kippu", type: "NOUN", isActive: false },
+  { kanji: "駅", romaji: "Eki", type: "NOUN", isActive: false },
+  { kanji: "地下鉄", romaji: "Chikatetsu", type: "NOUN", isActive: false },
+  { kanji: "新幹線", romaji: "Shinkansen", type: "NOUN", isActive: false },
+  { kanji: "バス", romaji: "Basu", type: "NOUN", isActive: false },
+  { kanji: "タクシー", romaji: "Takushii", type: "NOUN", isActive: false },
+  { kanji: "自転車", romaji: "Jitensha", type: "NOUN", isActive: false },
+  { kanji: "空港", romaji: "Kuukou", type: "NOUN", isActive: false },
+];
+---
+
+<SwissLayout
+  title="Dashboard"
+  activeWord={{
+    kanji: "電車",
+    romaji: "Densha",
+    meaning: "Train",
+    type: "NOUN",
+  }}
+>
+  <!-- Hero Card -->
+  <BigKanjiCard
+    kanji={wordOfTheDay.kanji}
+    romaji={wordOfTheDay.romaji}
+    meaning={wordOfTheDay.meaning}
+    strokes={wordOfTheDay.strokes}
+    level={wordOfTheDay.level}
+  />
+
+  <!-- Vocab Grid -->
+  {
+    vocabList.map((vocab) => (
+      <VocabularyCard
+        kanji={vocab.kanji}
+        romaji={vocab.romaji}
+        type={vocab.type}
+        isActive={vocab.isActive}
+      />
+    ))
+  }
+
+  <!-- Image Filler (Station) -->
+  <div
+    class="relative border-b border-r border-border-line overflow-hidden group min-h-[300px]"
+  >
+    <!-- Placeholder until image is loaded -->
+    <div class="absolute inset-0 bg-surface flex items-center justify-center">
+      <span class="text-subtle text-sm font-bold tracking-widest uppercase"
+        >Tokyo Station</span
+      >
+    </div>
+
+    <img
+      src="/station.jpg"
+      alt="Station"
+      class="absolute inset-0 w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 transition-all duration-500"
+      onerror="this.style.display='none'"
+    />
+
+    <div
+      class="absolute inset-0 flex items-center justify-center bg-canvas/80 p-6 text-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+    >
+      <p class="font-serif italic text-2xl text-ink">
+        "Moving through the city"
+      </p>
+    </div>
+  </div>
+</SwissLayout>

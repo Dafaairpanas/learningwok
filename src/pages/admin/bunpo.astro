@@ -1,0 +1,419 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { Plus } from "lucide-react";
+
+// Use client side fetching for consistency
+---
+
+<AdminLayout title="Kelola Bunpo (文法)">
+  <div class="space-y-8">
+    <div class="flex items-end justify-between border-b border-ink pb-6">
+      <div>
+        <h2 class="text-4xl font-black uppercase tracking-tighter text-ink">
+          Daftar Bunpo
+        </h2>
+        <p
+          id="total-count"
+          class="text-sm font-bold uppercase tracking-widest text-subtle mt-2"
+        >
+          Syncing Database...
+        </p>
+      </div>
+      <button
+        id="add-btn"
+        class="inline-flex items-center gap-2 border-2 border-ink bg-brand-neon px-6 py-3 text-sm font-bold uppercase tracking-widest text-ink hover:bg-brand-orange hover:translate-x-1 hover:-translate-y-1 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none"
+      >
+        <Plus className="h-4 w-4" />
+        Tambah Bunpo
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="border border-border-line bg-canvas">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-border-line bg-surface">
+              <th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-32"
+                >Tipe</th
+              >
+              <th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-48"
+                >Pola</th
+              >
+              <th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line"
+                >Arti</th
+              >
+              <th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink border-r border-border-line w-24 text-center"
+                >Level</th
+              >
+              <th
+                class="p-4 text-xs font-black uppercase tracking-widest text-ink text-right w-28"
+                >Aksi</th
+              >
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-border-line">
+            <tr>
+              <td
+                colspan="5"
+                class="p-8 text-center text-subtle font-medium animate-pulse"
+              >
+                INITIALIZING DATA STREAM...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    id="bunpo-modal"
+    class="fixed inset-0 z-50 hidden"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Backdrop -->
+    <div
+      id="modal-backdrop"
+      class="fixed inset-0 bg-ink/80 backdrop-blur-sm transition-opacity"
+    >
+    </div>
+
+    <div
+      class="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:p-0"
+    >
+      <div
+        class="relative inline-block transform overflow-hidden bg-canvas text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border-2 border-ink sm:align-middle"
+      >
+        <div class="bg-brand-neon p-4 border-b-2 border-ink">
+          <h3
+            class="text-xl font-black uppercase tracking-tighter text-ink"
+            id="modal-title"
+          >
+            TAMBAH BUNPO
+          </h3>
+        </div>
+
+        <div class="p-6">
+          <form id="bunpo-form" class="space-y-6">
+            <input type="hidden" id="bunpo-id" name="id" />
+
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <label
+                  for="bunpo_type"
+                  class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                  >Tipe</label
+                >
+                <select
+                  id="bunpo_type"
+                  class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                >
+                  <option value="grammar">Tata Bahasa</option>
+                  <option value="sentence_pattern">Pola Kalimat</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="jlpt_level"
+                  class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                  >Level</label
+                >
+                <select
+                  id="jlpt_level"
+                  class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                >
+                  <option value="N5">N5</option>
+                  <option value="N4">N4</option>
+                  <option value="N3">N3</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="category_id"
+                class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                >Kategori</label
+              >
+              <select
+                id="category_id"
+                class="block w-full border-2 border-border-line bg-surface p-3 font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+              >
+                <option value="">- PILIH -</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                for="pattern"
+                class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                >Pola</label
+              >
+              <input
+                type="text"
+                id="pattern"
+                required
+                class="block w-full border-2 border-border-line bg-surface p-3 font-jp text-lg font-bold focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                placeholder="Ex: ~ている"
+              />
+            </div>
+
+            <div>
+              <label
+                for="meaning"
+                class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                >Arti</label
+              >
+              <textarea
+                id="meaning"
+                required
+                rows="2"
+                class="block w-full border-2 border-border-line bg-canvas p-3 font-medium focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                placeholder="Ex: Sedang melakukan..."></textarea>
+            </div>
+
+            <div>
+              <label
+                for="usage"
+                class="block text-xs font-bold uppercase tracking-widest text-ink mb-2"
+                >Penggunaan (Opsional)</label
+              >
+              <textarea
+                id="usage"
+                rows="2"
+                class="block w-full border-2 border-border-line bg-canvas p-3 text-sm focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+                placeholder="Ex: Digunakan untuk aksi yang sedang berlangsung"
+              ></textarea>
+            </div>
+
+            <div class="pt-4 flex gap-4">
+              <button
+                type="button"
+                id="cancel-btn"
+                class="flex-1 border-2 border-border-line bg-canvas py-3 text-sm font-bold uppercase tracking-widest hover:bg-surface hover:text-ink transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                class="flex-1 border-2 border-ink bg-ink text-canvas py-3 text-sm font-bold uppercase tracking-widest hover:bg-brand-orange hover:text-ink hover:border-ink transition-colors"
+              >
+                Simpan Data
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+  import { materiService, type BunpoWithLevel } from "../../services/materi";
+  import { adminService, type BunpoInsert } from "../../services/admin";
+
+  let bunpoList: BunpoWithLevel[] = [];
+
+  // DOM
+  const tableBody = document.getElementById("table-body");
+  const modal = document.getElementById("bunpo-modal");
+  const modalTitle = document.getElementById("modal-title");
+  const form = document.getElementById("bunpo-form") as HTMLFormElement;
+  const addBtn = document.getElementById("add-btn");
+  const cancelBtn = document.getElementById("cancel-btn");
+  const backdrop = document.getElementById("modal-backdrop");
+  const totalCountEl = document.getElementById("total-count");
+
+  // Inputs
+  const idInput = document.getElementById("bunpo-id") as HTMLInputElement;
+  const typeInput = document.getElementById("bunpo_type") as HTMLSelectElement;
+  const levelInput = document.getElementById("jlpt_level") as HTMLSelectElement;
+  const categoryInput = document.getElementById(
+    "category_id",
+  ) as HTMLSelectElement;
+  const patternInput = document.getElementById("pattern") as HTMLInputElement;
+  const meaningInput = document.getElementById(
+    "meaning",
+  ) as HTMLTextAreaElement;
+  const usageInput = document.getElementById("usage") as HTMLTextAreaElement;
+
+  function renderTable(data: BunpoWithLevel[]) {
+    if (!tableBody) return;
+    if (data.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-subtle font-bold uppercase tracking-widest">No Data Found</td></tr>`;
+      return;
+    }
+
+    const grammarCount = data.filter((d) => d.bunpo_type === "grammar").length;
+    const polaCount = data.filter(
+      (d) => d.bunpo_type === "sentence_pattern",
+    ).length;
+    if (totalCountEl)
+      totalCountEl.textContent = `${data.length} ITEM (G: ${grammarCount}, P: ${polaCount})`;
+
+    tableBody.innerHTML = data
+      .map(
+        (item) => `
+        <tr class="group hover:bg-surface transition-colors">
+            <td class="p-4 border-r border-border-line">
+                <span class="inline-block px-2 py-1 text-xs font-bold uppercase tracking-widest border border-ink ${
+                  item.bunpo_type === "grammar"
+                    ? "bg-brand-neon text-ink"
+                    : "bg-surface text-subtle"
+                }">
+                ${item.bunpo_type === "grammar" ? "Tata Bahasa" : "Pola"}
+                </span>
+            </td>
+            <td class="p-4 border-r border-border-line font-jp text-lg font-bold text-ink">${item.pattern}</td>
+            <td class="p-4 border-r border-border-line font-medium text-ink">${item.meaning}</td>
+            <td class="p-4 border-r border-border-line text-center">
+                 <span class="inline-block border border-ink bg-canvas px-2 py-1 text-xs font-bold uppercase tracking-widest ${
+                   item.jlpt_level === "N5"
+                     ? "text-brand-green"
+                     : item.jlpt_level === "N4"
+                       ? "text-brand-blue"
+                       : "text-brand-purple"
+                 }">${item.jlpt_level || "?"}</span>
+            </td>
+             <td class="p-4 text-right">
+                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button class="edit-btn p-2 border border-transparent hover:border-ink hover:bg-canvas text-subtle hover:text-ink transition-all" data-id="${item.id}" title="Edit">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                  </button>
+                  <button class="delete-btn p-2 border border-transparent hover:border-red-600 hover:bg-red-50 text-subtle hover:text-red-600 transition-all" data-id="${item.id}" title="Delete">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </button>
+                </div>
+             </td>
+        </tr>
+      `,
+      )
+      .join("");
+
+    // Attach Listeners
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const id = (e.currentTarget as HTMLElement).dataset.id;
+        const item = bunpoList.find((b) => b.id === id);
+        if (item) openModal(item);
+      });
+    });
+
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const id = (e.currentTarget as HTMLElement).dataset.id;
+        if (id) handleDelete(id);
+      });
+    });
+  }
+
+  // --- CRUD Logic ---
+  async function loadCategories() {
+    if (!supabase) return;
+    const { data, error } = await supabase
+      .from("categories")
+      .select("id, name")
+      .eq("content_type", "bunpo")
+      .order("name");
+
+    if (data && !error && categoryInput) {
+      categoryInput.innerHTML =
+        '<option value="">- PILIH -</option>' +
+        data
+          .map((cat) => `<option value="${cat.id}">${cat.name}</option>`)
+          .join("");
+    }
+  }
+
+  async function loadData() {
+    try {
+      await loadCategories();
+      bunpoList = await materiService.getBunpo(10000);
+      renderTable(bunpoList);
+    } catch (err) {
+      console.error(err);
+      if (tableBody)
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-red-600 font-bold uppercase tracking-widest py-8">Connection Failed</td></tr>`;
+    }
+  }
+
+  function openModal(item: BunpoWithLevel | null = null) {
+    if (modal) modal.classList.remove("hidden");
+    if (modalTitle)
+      modalTitle.textContent = item ? "EDIT BUNPO" : "TAMBAH BUNPO";
+
+    if (item) {
+      idInput.value = item.id;
+      typeInput.value = item.bunpo_type || "grammar";
+      levelInput.value = item.jlpt_level || "N5";
+      categoryInput.value = (item as any).category_id || "";
+      patternInput.value = item.pattern;
+      meaningInput.value = item.meaning;
+      usageInput.value = item.usage || "";
+    } else {
+      form.reset();
+      idInput.value = "";
+      levelInput.value = "N5";
+      typeInput.value = "grammar";
+      categoryInput.value = "";
+    }
+  }
+
+  function closeModal() {
+    if (modal) modal.classList.add("hidden");
+  }
+
+  addBtn?.addEventListener("click", () => openModal(null));
+  cancelBtn?.addEventListener("click", closeModal);
+  backdrop?.addEventListener("click", closeModal);
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const id = idInput.value;
+    const payload: BunpoInsert = {
+      bunpo_type: typeInput.value as "grammar" | "sentence_pattern",
+      jlpt_level: levelInput.value,
+      category_id: categoryInput.value || null,
+      pattern: patternInput.value,
+      meaning: meaningInput.value,
+      usage: usageInput.value || null,
+      examples: [],
+      notes: null,
+    };
+
+    try {
+      if (id) {
+        await adminService.updateBunpo(id, payload);
+      } else {
+        await adminService.createBunpo(payload);
+      }
+      closeModal();
+      loadData();
+    } catch (err) {
+      alert("Error: " + (err as Error).message);
+    }
+  });
+
+  async function handleDelete(id: string) {
+    if (!confirm("Are you sure?")) return;
+    try {
+      await adminService.deleteBunpo(id);
+      loadData();
+    } catch (err) {
+      alert("Delete failed: " + (err as Error).message);
+    }
+  }
+
+  // Init
+  loadData();
+</script>

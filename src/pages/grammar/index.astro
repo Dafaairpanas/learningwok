@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GrammarList from '../../components/grammar/GrammarList';
+import { mockGrammar } from '../../lib/mockData';
+import { Layers } from 'lucide-react';
+
+import { supabase } from '../../lib/supabase';
+
+let grammarData = mockGrammar;
+
+if (supabase) {
+  const { data, error } = await supabase
+    .from('bunpo_with_level')
+    .select('*')
+    .eq('bunpo_type', 'grammar')
+    .order('jlpt_level', { ascending: false })
+    .order('pattern', { ascending: true });
+
+  if (data && !error && data.length > 0) {
+    grammarData = data;
+    console.log(`Loaded ${data.length} grammar patterns from Supabase`);
+  } else {
+    console.log('Using mock grammar, Supabase error:', error?.message || 'No data');
+  }
+}
+---
+
+<Layout title="Grammar">
+  <section class="py-12 lg:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="mb-12">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-500 dark:bg-purple-900/20">
+            <span class="font-jp text-2xl font-bold">文</span>
+          </div>
+          <div>
+            <h1 class="text-fluid-3xl font-bold text-primary dark:text-primary-dark">
+              Grammar
+            </h1>
+            <p class="text-muted dark:text-muted-dark">
+              Pahami struktur tata bahasa Jepang
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a
+            href="#"
+            class="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent/90 dark:bg-accent-dark dark:hover:bg-accent-dark/90"
+          >
+            <Layers className="h-4 w-4" />
+            Flashcard Mode
+          </a>
+        </div>
+      </div>
+
+      <GrammarList initialGrammar={grammarData} client:load />
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,85 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { FlashcardGame } from "../../components/flashcard/FlashcardGame";
+import { flashcardService } from "../../services/flashcard";
+import type { FlashcardType, FlashcardItem } from "../../services/flashcard";
+
+const type = Astro.url.searchParams.get("type") as FlashcardType;
+const level = Astro.url.searchParams.get("level") || "N5";
+const count = parseInt(Astro.url.searchParams.get("count") || "10");
+
+console.log("[Play Page] Params:", { type, level, count });
+
+// Server-side data fetching
+let initialData: FlashcardItem[] = [];
+let error = null;
+
+try {
+  if (type) {
+    initialData = await flashcardService.getSessionData(type, level, count);
+  }
+} catch (e: any) {
+  console.error("Failed to load flashcards", e);
+  error = e.message || "Failed to load session data.";
+}
+---
+
+<Layout title={`Playing ${type} ${level}`}>
+  <main
+    class="min-h-screen bg-pattern-dots flex flex-col items-center justify-center p-4"
+  >
+    {/* DEBUG INFO - REMOVE LATER */}
+    <div
+      class="fixed top-0 left-0 bg-black text-white p-2 text-xs z-50 opacity-50 hover:opacity-100"
+    >
+      Type: {type}
+      <br />
+      Level: "{level}" <br />
+      Count: {count}
+      <br />
+      Data Length: {initialData.length}
+      <br />
+      Error: {error}
+    </div>
+
+    {
+      error ? (
+        <div class="bg-red-50 border-2 border-red-500 p-8 text-center max-w-md">
+          <h2 class="text-xl font-bold text-red-600 mb-2">
+            Error Loading Session
+          </h2>
+          <p class="text-red-500 mb-4">{error}</p>
+          <a
+            href="/flashcards"
+            class="inline-block border-2 border-red-600 px-6 py-2 font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-colors"
+          >
+            Back to Menu
+          </a>
+        </div>
+      ) : initialData.length === 0 ? (
+        <div class="bg-canvas border-2 border-ink p-8 text-center max-w-md shadow-hard">
+          <h2 class="text-2xl font-black uppercase tracking-tighter mb-2">
+            No Data Found
+          </h2>
+          <p class="text-subtle mb-6">
+            Could not find any {type} for level {level}.
+          </p>
+          <a
+            href="/flashcards"
+            class="inline-block border-2 border-ink bg-ink text-canvas px-6 py-3 font-bold uppercase tracking-widest hover:bg-brand-orange hover:text-ink hover:border-ink transition-colors"
+          >
+            Try Different Settings
+          </a>
+        </div>
+      ) : (
+        <div class="w-full">
+          <FlashcardGame
+            client:load
+            data={initialData}
+            onExit={() => (window.location.href = "/flashcards")}
+          />
+        </div>
+      )
+    }
+  </main>
+</Layout>

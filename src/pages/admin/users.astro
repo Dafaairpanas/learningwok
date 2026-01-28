@@ -1,0 +1,60 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { Users, Shield } from "lucide-react";
+---
+
+<AdminLayout title="Kelola Users">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-ink">Daftar Users</h2>
+        <p class="text-sm text-subtle">Kelola pengguna aplikasi</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-border-line bg-canvas p-6">
+      <!-- Mock Data for now as we don't have a users table public exposure or admin function yet -->
+      <!-- In a real Supabase Auth setup, listing users usually requires Service Role Client or a secure Edge Function -->
+      <!-- We will display a placeholder message and maybe the current user -->
+
+      <div class="text-center py-12">
+        <div
+          class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-surface mb-4"
+        >
+          <Users className="h-8 w-8 text-subtle" />
+        </div>
+        <h3 class="text-lg font-medium text-ink">Admin Users</h3>
+        <p class="mt-2 text-sm text-subtle max-w-md mx-auto">
+          Fitur manajemen user (User List, Role Assignment) membutuhkan akses
+          Service Role Supabase. Saat ini, Anda melihat halaman ini sebagai
+          Admin.
+        </p>
+        <div class="mt-6">
+          <p class="text-sm font-medium text-ink">Current Session:</p>
+          <code
+            id="user-json"
+            class="mt-2 block text-xs bg-surface p-2 rounded text-left overflow-auto max-w-lg mx-auto border border-border-line text-subtle"
+          >
+            Loading...
+          </code>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+
+  async function loadUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const codeEl = document.getElementById("user-json");
+    if (codeEl && user) {
+      codeEl.textContent = JSON.stringify(user, null, 2);
+    }
+  }
+
+  loadUser();
+</script>

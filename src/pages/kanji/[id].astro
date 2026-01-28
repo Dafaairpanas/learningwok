@@ -1,0 +1,166 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Badge from "../../components/ui/Badge";
+import { getKanjiById, mockKanji } from "../../lib/mockData";
+import { ArrowLeft, BookOpen, Volume2 } from "lucide-react";
+
+export function getStaticPaths() {
+  return mockKanji.map((kanji) => ({
+    params: { id: kanji.id },
+    props: { kanji },
+  }));
+}
+
+const { kanji } = Astro.props;
+
+if (!kanji) {
+  return Astro.redirect("/kanji");
+}
+---
+
+<Layout title={`Kanji: ${kanji.character}`}>
+  <section class="py-12 lg:py-20">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <!-- Back Button -->
+      <a
+        href="/kanji"
+        class="mb-8 inline-flex items-center gap-2 text-subtle hover:text-ink transition-colors"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span>Kembali ke daftar Kanji</span>
+      </a>
+
+      <!-- Main Card -->
+      <div
+        class="overflow-hidden rounded-3xl border border-border-line bg-canvas"
+      >
+        <!-- Header with Kanji -->
+        <div
+          class="bg-gradient-to-r from-red-50 to-orange-50 p-12 text-center dark:from-red-900/20 dark:to-orange-900/20"
+        >
+          <Badge
+            level={kanji.jlpt_level}
+            size="lg"
+            className="mb-6"
+            client:load
+          />
+
+          <span class="font-jp kanji-display text-ink">
+            {kanji.character}
+          </span>
+
+          {
+            kanji.stroke_count && (
+              <p class="mt-4 text-sm text-subtle">
+                {kanji.stroke_count} goresan
+              </p>
+            )
+          }
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 md:p-12">
+          <!-- Meaning -->
+          <div class="text-center">
+            <h1 class="text-3xl font-bold text-ink">
+              {kanji.meaning}
+            </h1>
+            {
+              kanji.category && (
+                <span class="mt-2 inline-block rounded-full bg-surface px-3 py-1 text-sm text-subtle">
+                  {kanji.category}
+                </span>
+              )
+            }
+          </div>
+
+          <!-- Readings -->
+          <div class="mt-10 grid gap-6 md:grid-cols-2">
+            <!-- Onyomi -->
+            <div class="rounded-2xl bg-blue-50 p-6 dark:bg-blue-900/20">
+              <div class="flex items-center gap-2 mb-4">
+                <span
+                  class="text-sm font-medium text-blue-600 dark:text-blue-400"
+                  >音読み (Onyomi)</span
+                >
+                <span class="text-xs text-blue-500">Chinese Reading</span>
+              </div>
+              <p
+                class="font-jp text-2xl font-medium text-blue-700 dark:text-blue-300"
+              >
+                {kanji.onyomi || "-"}
+              </p>
+            </div>
+
+            <!-- Kunyomi -->
+            <div class="rounded-2xl bg-green-50 p-6 dark:bg-green-900/20">
+              <div class="flex items-center gap-2 mb-4">
+                <span
+                  class="text-sm font-medium text-green-600 dark:text-green-400"
+                  >訓読み (Kunyomi)</span
+                >
+                <span class="text-xs text-green-500">Japanese Reading</span>
+              </div>
+              <p
+                class="font-jp text-2xl font-medium text-green-700 dark:text-green-300"
+              >
+                {kanji.kunyomi || "-"}
+              </p>
+            </div>
+          </div>
+
+          <!-- Examples -->
+          {
+            kanji.examples && kanji.examples.length > 0 && (
+              <div class="mt-10">
+                <h2 class="mb-6 flex items-center gap-2 text-xl font-semibold text-ink">
+                  <BookOpen className="h-5 w-5" />
+                  Contoh Penggunaan
+                </h2>
+                <div class="space-y-4">
+                  {kanji.examples.map(
+                    (example: {
+                      kanji: string;
+                      reading: string;
+                      meaning: string;
+                    }) => (
+                      <div class="flex items-center justify-between rounded-xl border border-border-line bg-surface p-4">
+                        <div class="flex items-center gap-4">
+                          <span class="font-jp text-2xl font-medium text-ink">
+                            {example.kanji}
+                          </span>
+                          <div>
+                            <p class="font-jp text-subtle">{example.reading}</p>
+                            <p class="text-sm text-subtle/80">
+                              {example.meaning}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Action Buttons -->
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <a
+              href="/kanji/flashcard"
+              class="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 font-medium text-white transition-colors hover:bg-accent/90 dark:bg-accent-dark dark:hover:bg-accent-dark/90"
+            >
+              Latihan Flashcard
+            </a>
+            <a
+              href="/kanji"
+              class="inline-flex items-center gap-2 rounded-xl border border-border-line px-6 py-3 font-medium text-subtle transition-colors hover:bg-surface hover:text-ink"
+            >
+              Lihat Kanji Lain
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

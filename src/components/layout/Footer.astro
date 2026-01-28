@@ -1,0 +1,111 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-border-line bg-canvas py-12">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-8 md:grid-cols-4">
+      <!-- Brand -->
+      <div class="md:col-span-2">
+        <a href="/" class="flex items-center gap-2 mb-4 group">
+          <span class="text-2xl group-hover:scale-110 transition-transform"
+            >🎌</span
+          >
+          <span
+            class="font-display font-bold text-xl tracking-tighter text-ink"
+          >
+            NIHONGO<span class="text-brand-orange">IN</span>
+          </span>
+        </a>
+        <p class="max-w-xs text-sm text-subtle leading-relaxed">
+          Master Japanese with a spaced repetition system designed for JLPT
+          N5-N3 success.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="mb-4 text-xs font-bold uppercase tracking-widest text-ink">
+          Belajar
+        </h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a
+              href="/kanji"
+              class="text-subtle hover:text-brand-orange transition-colors"
+              >Kanji</a
+            >
+          </li>
+          <li>
+            <a
+              href="/kosakata"
+              class="text-subtle hover:text-brand-orange transition-colors"
+              >Kosakata</a
+            >
+          </li>
+          <li>
+            <a
+              href="/bunpo"
+              class="text-subtle hover:text-brand-orange transition-colors"
+              >Bunpo</a
+            >
+          </li>
+          <li>
+            <a
+              href="/pola-kalimat"
+              class="text-subtle hover:text-brand-orange transition-colors"
+              >Pola Kalimat</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- JLPT Levels -->
+      <div>
+        <h3 class="mb-4 text-xs font-bold uppercase tracking-widest text-ink">
+          Level JLPT
+        </h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a
+              href="/kanji?level=N5"
+              class="text-subtle hover:text-brand-neon hover:text-ink transition-colors"
+              >JLPT N5</a
+            >
+          </li>
+          <li>
+            <a
+              href="/kanji?level=N4"
+              class="text-subtle hover:text-brand-neon hover:text-ink transition-colors"
+              >JLPT N4</a
+            >
+          </li>
+          <li>
+            <a
+              href="/kanji?level=N3"
+              class="text-subtle hover:text-brand-neon hover:text-ink transition-colors"
+              >JLPT N3</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div
+      class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border-line pt-8 sm:flex-row"
+    >
+      <p class="text-xs font-bold uppercase tracking-widest text-subtle">
+        © {currentYear} Nihongoin. Handcrafted with precision.
+      </p>
+      <div class="flex gap-4">
+        <a
+          href="/admin/login"
+          class="text-xs font-bold uppercase tracking-widest text-subtle hover:text-ink transition-colors"
+        >
+          Admin Portal
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

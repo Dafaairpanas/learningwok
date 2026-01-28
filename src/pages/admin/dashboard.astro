@@ -1,0 +1,407 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { ArrowUpRight } from "lucide-react";
+---
+
+<AdminLayout title="Dashboard">
+  <div class="space-y-12">
+    <!-- Welcome Banner (Swiss Style) -->
+    <div class="border border-ink bg-canvas p-8 relative overflow-hidden">
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-brand-neon -mr-16 -mt-16 rounded-full blur-3xl opacity-20 pointer-events-none"
+      >
+      </div>
+      <div class="relative z-10">
+        <h2 class="text-4xl font-black uppercase tracking-tighter mb-2">
+          Selamat datang, Admin!
+        </h2>
+        <p class="text-lg text-subtle font-medium max-w-2xl">
+          System status operational. Manage your Japanese learning content
+          efficiently.
+        </p>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border-line border border-border-line"
+    >
+      <!-- Kanji -->
+      <a
+        href="/admin/kanji"
+        class="bg-canvas p-8 hover:bg-surface transition-colors group relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <ArrowUpRight className="h-5 w-5 text-subtle" />
+        </div>
+        <div class="flex flex-col h-full justify-between">
+          <div
+            class="mb-4 w-12 h-12 flex items-center justify-center border border-border-line bg-surface text-ink font-jp font-bold text-2xl group-hover:bg-brand-orange group-hover:border-ink transition-colors"
+          >
+            漢
+          </div>
+          <div>
+            <p
+              id="count-kanji"
+              class="text-5xl font-black tracking-tighter text-ink mb-1"
+            >
+              ...
+            </p>
+            <p class="text-xs font-bold uppercase tracking-widest text-subtle">
+              Total Kanji
+            </p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Kosakata -->
+      <a
+        href="/admin/kosakata"
+        class="bg-canvas p-8 hover:bg-surface transition-colors group relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <ArrowUpRight className="h-5 w-5 text-subtle" />
+        </div>
+        <div class="flex flex-col h-full justify-between">
+          <div
+            class="mb-4 w-12 h-12 flex items-center justify-center border border-border-line bg-surface text-ink font-jp font-bold text-2xl group-hover:bg-brand-neon group-hover:border-ink transition-colors"
+          >
+            語
+          </div>
+          <div>
+            <p
+              id="count-kosakata"
+              class="text-5xl font-black tracking-tighter text-ink mb-1"
+            >
+              ...
+            </p>
+            <p class="text-xs font-bold uppercase tracking-widest text-subtle">
+              Total Kosakata
+            </p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Grammar -->
+      <a
+        href="/admin/bunpo"
+        class="bg-canvas p-8 hover:bg-surface transition-colors group relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <ArrowUpRight className="h-5 w-5 text-subtle" />
+        </div>
+        <div class="flex flex-col h-full justify-between">
+          <div
+            class="mb-4 w-12 h-12 flex items-center justify-center border border-border-line bg-surface text-ink font-jp font-bold text-2xl group-hover:bg-cyan-400 group-hover:border-ink transition-colors"
+          >
+            文
+          </div>
+          <div>
+            <p
+              id="count-grammar"
+              class="text-5xl font-black tracking-tighter text-ink mb-1"
+            >
+              ...
+            </p>
+            <p class="text-xs font-bold uppercase tracking-widest text-subtle">
+              Total Grammar
+            </p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Actions -->
+      <div class="bg-surface/50 p-8 flex flex-col justify-center gap-4">
+        <button
+          id="refresh-btn"
+          class="text-xs font-bold uppercase tracking-widest text-subtle hover:text-ink flex items-center gap-2 transition-colors"
+        >
+          <span>Sync Data</span>
+          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        </button>
+        <div class="h-px bg-border-line w-full"></div>
+        <p class="text-sm font-medium text-subtle">
+          Database connected.<br />
+          All systems nominal.
+        </p>
+      </div>
+    </div>
+
+    <!-- Activity & Quick Actions -->
+    <div class="grid gap-12 lg:grid-cols-2">
+      <!-- Recent Activity -->
+      <div class="border border-border-line bg-canvas">
+        <div
+          class="p-6 border-b border-border-line flex justify-between items-end"
+        >
+          <h3 class="font-black text-2xl uppercase tracking-tighter">
+            Recent Activity
+          </h3>
+          <span class="text-xs font-bold uppercase tracking-widest text-subtle"
+            >Audit Logger</span
+          >
+        </div>
+
+        <div id="activity-list" class="divide-y divide-border-line">
+          <div class="p-6 text-center text-subtle text-sm animate-pulse">
+            Loading activity stream...
+          </div>
+        </div>
+        <div class="p-4 bg-surface border-t border-border-line text-right">
+          <a
+            href="#"
+            class="text-xs font-bold uppercase tracking-widest text-ink hover:text-brand-orange"
+            >View Full Log →</a
+          >
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="space-y-6">
+        <h3 class="font-black text-2xl uppercase tracking-tighter">
+          Quick Actions
+        </h3>
+        <div class="grid gap-4">
+          <a
+            href="/admin/kanji"
+            class="flex items-center justify-between p-6 border border-border-line bg-canvas hover:bg-ink hover:text-canvas transition-colors group"
+          >
+            <span class="font-bold text-lg">ADD NEW KANJI</span>
+            <span
+              class="border border-current px-2 py-1 text-xs font-mono group-hover:border-canvas"
+              >CMD+K</span
+            >
+          </a>
+          <a
+            href="/admin/kosakata"
+            class="flex items-center justify-between p-6 border border-border-line bg-canvas hover:bg-ink hover:text-canvas transition-colors group"
+          >
+            <span class="font-bold text-lg">ADD NEW KOSAKATA</span>
+            <span
+              class="border border-current px-2 py-1 text-xs font-mono group-hover:border-canvas"
+              >CMD+V</span
+            >
+          </a>
+          <a
+            href="/admin/bunpo"
+            class="flex items-center justify-between p-6 border border-border-line bg-canvas hover:bg-ink hover:text-canvas transition-colors group"
+          >
+            <span class="font-bold text-lg">ADD NEW BUNPO</span>
+            <span
+              class="border border-current px-2 py-1 text-xs font-mono group-hover:border-canvas"
+              >CMD+B</span
+            >
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+
+  const CACHE_KEY = "dashboard_stats";
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+  const els = {
+    kanji: document.getElementById("count-kanji"),
+    kosakata: document.getElementById("count-kosakata"),
+    grammar: document.getElementById("count-grammar"),
+    activityList: document.getElementById("activity-list"),
+    refreshBtn: document.getElementById("refresh-btn"),
+  };
+
+  function timeAgo(dateString: string) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "y ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "mo ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "d ago";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "h ago";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "m ago";
+    return "Just now";
+  }
+
+  interface Activity {
+    type: string;
+    item: string;
+    time: string;
+    action: string;
+  }
+
+  interface Counts {
+    kanji: number;
+    kosakata: number;
+    grammar: number;
+  }
+
+  interface DashboardData {
+    counts: Counts;
+    activities: Activity[];
+  }
+
+  async function fetchStats(): Promise<DashboardData> {
+    // 1. Counts (Parallel)
+    const pKanji = supabase
+      .from("kanji")
+      .select("*", { count: "exact", head: true });
+    const pKosakata = supabase
+      .from("kosakata")
+      .select("*", { count: "exact", head: true });
+    const pGrammar = supabase
+      .from("bunpo")
+      .select("*", { count: "exact", head: true })
+      .eq("bunpo_type", "grammar");
+
+    // 2. Recent Activity
+    const pRecentKanji = supabase
+      .from("kanji")
+      .select("id, character, created_at")
+      .order("created_at", { ascending: false })
+      .limit(3);
+    const pRecentKosakata = supabase
+      .from("kosakata")
+      .select("id, kanji, created_at")
+      .order("created_at", { ascending: false })
+      .limit(3);
+    const pRecentBunpo = supabase
+      .from("bunpo")
+      .select("id, pattern, bunpo_type, created_at")
+      .order("created_at", { ascending: false })
+      .limit(3);
+
+    const [
+      rKanji,
+      rKosakata,
+      rGrammar,
+      recentKanji,
+      recentKosakata,
+      recentBunpo,
+    ] = await Promise.all([
+      pKanji,
+      pKosakata,
+      pGrammar,
+      pRecentKanji,
+      pRecentKosakata,
+      pRecentBunpo,
+    ]);
+
+    const counts: Counts = {
+      kanji: rKanji.count || 0,
+      kosakata: rKosakata.count || 0,
+      grammar: rGrammar.count || 0,
+    };
+
+    const activities: Activity[] = [
+      ...(recentKanji.data || []).map((d) => ({
+        type: "Kanji",
+        item: d.character,
+        time: d.created_at,
+        action: "Create",
+      })),
+      ...(recentKosakata.data || []).map((d) => ({
+        type: "Kosakata",
+        item: d.kanji,
+        time: d.created_at,
+        action: "Create",
+      })),
+      ...(recentBunpo.data || []).map((d) => ({
+        type: d.bunpo_type === "grammar" ? "Grammar" : "Pola",
+        item: d.pattern,
+        time: d.created_at,
+        action: "Create",
+      })),
+    ]
+      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+      .slice(0, 5);
+
+    return { counts, activities };
+  }
+
+  function render(data: DashboardData) {
+    const { counts, activities } = data;
+    if (els.kanji) els.kanji.textContent = counts.kanji.toString();
+    if (els.kosakata) els.kosakata.textContent = counts.kosakata.toString();
+    if (els.grammar) els.grammar.textContent = counts.grammar.toString();
+
+    if (els.activityList) {
+      if (activities.length === 0) {
+        els.activityList.innerHTML = `<div class="p-6 text-center text-sm text-subtle">No activity recorded.</div>`;
+      } else {
+        els.activityList.innerHTML = activities
+          .map(
+            (act) => `
+                    <div class="px-6 py-4 flex items-center justify-between hover:bg-surface transition-colors">
+                      <div class="flex items-center gap-4">
+                        <span class="w-8 h-8 flex items-center justify-center bg-link/10 text-link font-bold rounded-none border border-link text-xs">
+                            ${act.type.substring(0, 2).toUpperCase()}
+                        </span>
+                        <div>
+                            <p class="font-bold text-ink">
+                                ${act.action} <span class="font-jp text-lg ml-1">${act.item}</span>
+                            </p>
+                            <p class="text-xs font-bold uppercase tracking-widest text-subtle">${act.type}</p>
+                        </div>
+                      </div>
+                      <span class="text-xs font-mono text-subtle border border-border-line px-2 py-1">${timeAgo(act.time)}</span>
+                    </div>
+                `,
+          )
+          .join("");
+      }
+    }
+  }
+
+  async function init() {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const now = Date.now();
+      if (now - parsed.timestamp < CACHE_DURATION) {
+        console.log("Using cached dashboard stats");
+        render(parsed.data);
+        return;
+      }
+    }
+
+    console.log("Fetching freshness dashboard stats");
+    try {
+      const data = await fetchStats();
+      render(data);
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          timestamp: Date.now(),
+          data,
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+      if (els.activityList)
+        els.activityList.innerHTML = `<div class="p-6 text-center text-red-600 font-bold uppercase tracking-widest">Failed to load data.</div>`;
+    }
+  }
+
+  els.refreshBtn?.addEventListener("click", () => {
+    localStorage.removeItem(CACHE_KEY);
+    if (els.activityList)
+      els.activityList.innerHTML = `<div class="p-6 text-center text-subtle text-sm animate-pulse">Syncing...</div>`;
+    init();
+  });
+
+  init();
+</script>

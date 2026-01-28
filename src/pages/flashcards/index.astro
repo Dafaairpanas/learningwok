@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { FlashcardSetup } from "../../components/flashcard/FlashcardSetup";
+---
+
+<Layout title="Flashcards - Nihongoin">
+  <main class="min-h-screen bg-pattern-grid py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Breadcrumb -->
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-subtle hover:text-ink mb-8 border-b-2 border-transparent hover:border-ink pb-1 transition-all"
+      >
+        ← Back to Home
+      </a>
+
+      <FlashcardSetup client:only="react" />
+    </div>
+  </main>
+</Layout>

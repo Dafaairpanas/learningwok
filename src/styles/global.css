@@ -1,0 +1,134 @@
+@import "@fontsource/inter";
+@import "@fontsource/noto-sans-jp";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Mode (Default) */
+    --color-canvas: #FFFFFF;
+    --color-ink: #09090B;
+    --color-surface: #F4F4F5;
+    --color-border: #E4E4E7;
+    --color-subtle: #71717A;
+    
+    --color-brand-neon: #39FF14;
+    --color-brand-orange: #F97316;
+
+    /* Semantic Inverse Tokens (for hovers) */
+    --color-inv-canvas: #09090B; /* Black background on hover in light mode */
+    --color-inv-ink: #FFFFFF;    /* White text on hover in light mode */
+  }
+
+  .dark {
+    /* Dark Mode */
+    --color-canvas: #000000; /* Pure Black */
+    --color-ink: #FFFFFF;    /* Pure White */
+    --color-surface: #101010; /* Slightly lighter black for surfaces */
+    --color-border: #333333;
+    --color-subtle: #A1A1AA;
+
+    /* Swap Inverse Tokens */
+    --color-inv-canvas: #FFFFFF; /* White background on hover in dark mode */
+    --color-inv-ink: #000000;    /* Black text on hover in dark mode */
+  }
+
+
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--color-ink);
+    background-color: var(--color-canvas);
+  }
+
+  body {
+    @apply font-sans;
+  }
+
+  /* Japanese text styling */
+  .font-jp {
+    font-family: "Noto Sans JP", sans-serif;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: var(--color-brand-neon);
+    color: #000000; /* Always black text on neon */
+  }
+}
+
+@layer components {
+  /* Theme Utilities (mapping variables to Tailwind-like classes) */
+  .bg-canvas { background-color: var(--color-canvas); }
+  .bg-surface { background-color: var(--color-surface); }
+  .bg-border-line { background-color: var(--color-border); }
+  .bg-ink { background-color: var(--color-ink); }
+  .bg-inv-ink { background-color: var(--color-inv-ink); }
+  
+  .text-ink { color: var(--color-ink); }
+  .text-canvas { color: var(--color-canvas); }
+  .text-subtle { color: var(--color-subtle); }
+  
+  .border-ink { border-color: var(--color-ink); }
+  .border-border-line { border-color: var(--color-border); }
+
+  /* Brand Colors */
+  .bg-brand-neon { background-color: var(--color-brand-neon); }
+  .bg-brand-orange { background-color: var(--color-brand-orange); }
+  .text-brand-neon { color: var(--color-brand-neon); }
+
+
+  /* Swiss Grid Utilities */
+  .swiss-grid {
+    @apply grid gap-px border-l border-t;
+    background-color: var(--color-border);
+    border-color: var(--color-border);
+  }
+
+  .swiss-card {
+    @apply p-6 border-r border-b;
+    background-color: var(--color-canvas);
+    border-color: var(--color-border);
+  }
+
+  /* Typography Utilities */
+  .text-hero {
+    @apply font-black tracking-tighter uppercase leading-[0.85];
+  }
+
+  .text-label {
+    @apply text-xs font-bold tracking-widest uppercase;
+    color: var(--color-subtle);
+  }
+
+  /* Button Utilities */
+  .btn-swiss {
+    @apply inline-flex items-center justify-center px-8 py-4 font-bold uppercase tracking-wider text-sm border transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-none;
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+    &:hover {
+        background-color: var(--color-ink);
+        color: var(--color-canvas);
+    }
+  }
+
+  .btn-swiss-primary {
+    @apply border-transparent;
+    background-color: var(--color-ink);
+    color: var(--color-canvas);
+    &:hover {
+        background-color: var(--color-brand-neon);
+        color: #050505; /* Always black text ON neon */
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

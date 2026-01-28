@@ -1,0 +1,50 @@
+---
+import { Play } from "lucide-react";
+
+interface Props {
+  kanji: string;
+  romaji: string;
+  type?: string;
+  isActive?: boolean;
+}
+
+const { kanji, romaji, type = "NOUN", isActive = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    "relative p-8 flex flex-col justify-between border-b border-r border-border-line transition-all duration-300 cursor-pointer group z-10",
+    isActive ? "bg-brand-neon text-ink" : "bg-canvas hover:bg-surface",
+  ]}
+>
+  <div class="flex justify-between items-start">
+    <span
+      class:list={[
+        "text-xs font-bold tracking-widest uppercase",
+        isActive ? "text-ink" : "text-subtle",
+      ]}>{type}</span
+    >
+
+    {
+      isActive ? (
+        <div class="w-3 h-3 bg-ink rounded-full animate-pulse" />
+      ) : (
+        <button class="text-subtle hover:text-ink transition-colors p-2 -m-2 opacity-0 group-hover:opacity-100">
+          <Play className="w-5 h-5 fill-current" />
+        </button>
+      )
+    }
+  </div>
+
+  <div class="mt-8">
+    <span class="text-6xl font-bold block mb-2 font-jp leading-none"
+      >{kanji}</span
+    >
+    <span
+      class:list={[
+        "text-lg font-medium",
+        isActive ? "text-ink" : "text-subtle",
+      ]}>{romaji}</span
+    >
+  </div>
+</div>

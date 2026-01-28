@@ -1,0 +1,65 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { roadmapService } from "../../../services/roadmap";
+import RoadmapSlideshow from "../../../components/roadmap/RoadmapSlideshow";
+
+// Generate static paths for all level + day combinations
+export async function getStaticPaths() {
+  const days = await roadmapService.getRoadmapList();
+
+  return days.map((day) => ({
+    params: {
+      level: day.jlpt_level,
+      day: String(day.day_number),
+    },
+  }));
+}
+
+const { level, day } = Astro.params;
+
+if (!level || !day) {
+  return Astro.redirect("/roadmap");
+}
+
+const dayData = await roadmapService.getDayDetail(level, parseInt(day));
+
+if (!dayData) {
+  return Astro.redirect("/roadmap");
+}
+---
+
+<Layout title={`${dayData.title} - ${level} Day ${dayData.day_number}`}>
+  <div class="min-h-screen bg-canvas">
+    <!-- Header / Back Navigation -->
+    <div class="border-b border-border-line bg-canvas sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto flex items-center h-16 px-4">
+        <a
+          href="/roadmap"
+          class="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-subtle hover:text-ink transition-colors"
+        >
+          <span
+            class="border border-border-line p-1 group-hover:border-ink transition-colors"
+          >
+            ←
+          </span>
+          Back to Roadmap
+        </a>
+
+        <div
+          class="ml-6 pl-6 border-l border-border-line h-8 flex items-center"
+        >
+          <span class="font-bold text-ink uppercase tracking-wider text-sm">
+            Level {level} / Day {dayData.day_number}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content - Slideshow Wrapper -->
+    <main
+      class="max-w-7xl mx-auto border-x border-border-line min-h-[calc(100vh-64px)]"
+    >
+      <RoadmapSlideshow client:only="react" dayData={dayData} level={level} />
+    </main>
+  </div>
+</Layout>

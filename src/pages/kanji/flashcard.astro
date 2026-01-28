@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import KanjiFlashcard from '../../components/kanji/KanjiFlashcard';
+import Select from '../../components/ui/Select';
+import { mockKanji } from '../../lib/mockData';
+import { ArrowLeft, Shuffle } from 'lucide-react';
+
+const kanjiData = mockKanji;
+---
+
+<Layout title="Kanji Flashcard">
+  <section class="py-12 lg:py-20">
+    <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="mb-8 text-center">
+        <a
+          href="/kanji"
+          class="mb-8 inline-flex items-center gap-2 text-muted hover:text-primary dark:text-muted-dark dark:hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Kembali ke Kanji</span>
+        </a>
+        
+        <h1 class="mt-6 text-fluid-2xl font-bold text-primary dark:text-primary-dark">
+          🎴 Kanji Flashcard
+        </h1>
+        <p class="mt-2 text-muted dark:text-muted-dark">
+          Klik kartu untuk membalik. Nilai pemahaman kamu untuk spaced repetition.
+        </p>
+      </div>
+
+      <!-- Flashcard Component -->
+      <KanjiFlashcard kanji={kanjiData} client:load />
+
+      <!-- Tips -->
+      <div class="mt-12 rounded-2xl border border-blue-100 bg-blue-50 p-6 dark:border-blue-900/30 dark:bg-blue-900/10">
+        <h3 class="flex items-center gap-2 font-semibold text-blue-800 dark:text-blue-200">
+          <span>💡</span>
+          Tips Belajar
+        </h3>
+        <ul class="mt-3 space-y-2 text-sm text-blue-700 dark:text-blue-300">
+          <li>• <strong>Lagi</strong> - Kamu tidak ingat sama sekali, akan muncul segera</li>
+          <li>• <strong>Susah</strong> - Ingat dengan susah payah, interval pendek</li>
+          <li>• <strong>Baik</strong> - Ingat dengan usaha, interval normal</li>
+          <li>• <strong>Mudah</strong> - Ingat dengan mudah, interval panjang</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Layout>

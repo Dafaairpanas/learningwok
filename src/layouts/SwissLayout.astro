@@ -1,0 +1,126 @@
+---
+import { Icon } from "lucide-react";
+import ThemeToggle from "../components/ThemeToggle.astro";
+
+interface Props {
+  title: string;
+  currentModule?: string;
+  progress?: { current: number; total: number };
+  activeWord?: {
+    kanji: string;
+    romaji: string;
+    meaning: string;
+    type: string;
+  };
+}
+
+const {
+  title,
+  currentModule = "Travel Essentials",
+  progress = { current: 4, total: 20 },
+  activeWord = {
+    kanji: "電車",
+    romaji: "Densha",
+    meaning: "Train",
+    type: "NOUN",
+  },
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Nihongoin</title>
+    <script is:inline>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+  </head>
+  <body
+    class="bg-canvas text-ink overflow-hidden h-screen w-full flex font-sans antialiased selection:bg-brand-neon selection:text-ink"
+  >
+    <!-- Sidebar -->
+    <aside
+      class="w-[400px] flex-shrink-0 border-r border-border-line p-10 flex flex-col justify-between bg-canvas relative z-20"
+    >
+      <div>
+        <!-- Progress -->
+        <div class="flex items-baseline justify-between mb-6">
+          <div class="flex items-baseline gap-2">
+            <span class="text-8xl font-black tracking-tighter leading-none"
+              >{progress.current.toString().padStart(2, "0")}</span
+            >
+            <span class="text-4xl text-subtle font-light"
+              >/{progress.total}</span
+            >
+          </div>
+          <ThemeToggle />
+        </div>
+
+        <!-- Title -->
+        <h1
+          class="text-6xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-balance"
+        >
+          {currentModule}
+        </h1>
+
+        <p class="text-subtle text-lg leading-relaxed max-w-sm">
+          Master vocabulary needed for navigating trains, airports, and city
+          streets.
+        </p>
+      </div>
+
+      <!-- Active Word Sticky Footer -->
+      <div class="border-t border-ink pt-6">
+        <span
+          class="text-xs font-bold tracking-widest uppercase text-subtle mb-2 block"
+          >{activeWord.type}</span
+        >
+        <h2 class="text-5xl font-bold mb-2 font-jp">{activeWord.kanji}</h2>
+        <div class="flex items-baseline justify-between">
+          <p class="text-xl font-medium">
+            {activeWord.romaji} — {activeWord.meaning}
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 overflow-y-auto bg-canvas relative z-10 scrollbar-hide">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 auto-rows-[minmax(300px,auto)] border-l border-border-line"
+      >
+        <slot />
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>

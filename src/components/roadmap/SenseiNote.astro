@@ -1,0 +1,31 @@
+---
+// Component to render sensei note with basic markdown-like support
+interface Props {
+  note: string;
+}
+
+const { note } = Astro.props;
+
+// Simple parser for **bold** and *italic* and maybe emojis
+// We'll trust the input for now but in production should sanitize
+const formattedNote = note
+  ? note
+      // Bold
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      // Italic
+      .replace(/_(.*?)_/g, "<em>$1</em>")
+      // Newlines to <br>
+      .replace(/\n/g, "<br />")
+  : "";
+---
+
+<div class="bg-surface border-l-4 border-brand-orange p-4 rounded-r-lg">
+  <div class="flex gap-3">
+    <div class="text-2xl select-none">💡</div>
+    <div
+      class="prose prose-sm max-w-none text-ink prose-strong:text-ink prose-strong:font-bold"
+    >
+      <Fragment set:html={formattedNote} />
+    </div>
+  </div>
+</div>

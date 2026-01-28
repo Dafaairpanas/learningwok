@@ -1,0 +1,193 @@
+---
+import Layout from "../layouts/Layout.astro";
+import {
+  BookOpen,
+  Languages,
+  Sparkles,
+  Target,
+  Clock,
+  ArrowRight,
+} from "lucide-react";
+
+const features = [
+  {
+    href: "/kanji",
+    icon: "漢",
+    title: "Kanji",
+    description:
+      "Pelajari karakter Kanji dengan arti, bacaan, dan contoh penggunaan",
+    count: "20+ Kanji",
+  },
+  {
+    href: "/kosakata",
+    icon: "語",
+    title: "Kosakata",
+    description:
+      "Perkaya vocabulary dengan kata-kata penting dalam bahasa Jepang",
+    count: "10+ Kata",
+  },
+  {
+    href: "/grammar",
+    icon: "文",
+    title: "Grammar",
+    description:
+      "Pahami struktur tata bahasa Jepang dari dasar hingga lanjutan",
+    count: "8+ Pola",
+  },
+  {
+    href: "/pola-kalimat",
+    icon: "例",
+    title: "Pola Kalimat",
+    description: "Latih pola kalimat untuk percakapan sehari-hari",
+    count: "6+ Pattern",
+  },
+];
+
+const stats = [
+  { icon: Target, label: "JLPT Level", value: "N5-N3" },
+  { icon: Clock, label: "Spaced Repetition", value: "Anki Style" },
+  { icon: Sparkles, label: "Progress Tracking", value: "Otomatis" },
+];
+---
+
+<Layout title="Home">
+  <!-- Hero Section -->
+  <section class="border-b border-border-line">
+    <div
+      class="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-line"
+    >
+      <!-- Left: Title -->
+      <div class="p-8 lg:p-16 flex flex-col justify-between min-h-[500px]">
+        <div>
+          <div
+            class="inline-flex items-center gap-2 border border-ink px-3 py-1 mb-8"
+          >
+            <span class="w-2 h-2 bg-brand-neon rounded-full animate-pulse"
+            ></span>
+            <span class="text-xs font-bold tracking-widest uppercase"
+              >Platform Belajar JLPT</span
+            >
+          </div>
+
+          <h1
+            class="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] text-ink uppercase mb-6"
+          >
+            Nihongo<span class="text-brand-orange">in</span>
+          </h1>
+
+          <p class="text-xl max-w-md leading-relaxed">
+            Kuasai Jepang dengan metode <span class="bg-brand-neon px-1"
+              >Spaced Repetition</span
+            >. Tanpa basa-basi, langsung ke inti.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-4 mt-12">
+          <a
+            href="/kanji"
+            class="btn-swiss bg-brand-neon text-ink border-transparent hover:bg-ink hover:text-brand-neon"
+          >
+            Mulai Belajar
+          </a>
+          <a href="/dashboard" class="btn-swiss">
+            <span class="mr-2">⚡</span> Dashboard Baru
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Abstract/Image filler -->
+      <div
+        class="relative bg-surface hidden lg:flex items-center justify-center overflow-hidden"
+      >
+        <div
+          class="absolute inset-0 bg-[linear-gradient(45deg,#09090B_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.03]"
+        >
+        </div>
+        <div class="flex flex-col items-center text-center p-12">
+          <div
+            class="text-[15rem] leading-none font-bold font-jp text-ink/5 select-none"
+          >
+            日本
+          </div>
+          <div class="text-4xl font-bold uppercase tracking-widest mt-8">
+            Modern Way
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Grid -->
+  <section class="border-b border-border-line">
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border-line"
+    >
+      {
+        stats.map((stat) => (
+          <div class="p-8 flex items-center gap-4 hover:bg-surface transition-colors">
+            <stat.icon className="h-8 w-8 text-ink" strokeWidth={1.5} />
+            <div>
+              <p class="text-2xl font-bold leading-none mb-1">{stat.value}</p>
+              <p class="text-xs font-bold tracking-widest uppercase text-subtle">
+                {stat.label}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section>
+    <div class="p-8 border-b border-border-line bg-surface/30">
+      <h2 class="text-4xl font-black uppercase tracking-tight">Kurikulum</h2>
+    </div>
+
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x lg:divide-x divide-border-line border-b border-border-line"
+    >
+      {
+        features.map((feature) => (
+          <a
+            href={feature.href}
+            class="group p-8 flex flex-col justify-between min-h-[300px] hover:bg-brand-neon transition-colors duration-300"
+          >
+            <div>
+              <span class="font-jp text-6xl font-bold mb-6 block opacity-20 group-hover:opacity-100 transition-opacity">
+                {feature.icon}
+              </span>
+              <h3 class="text-2xl font-bold uppercase mb-2">{feature.title}</h3>
+              <p class="text-sm leading-relaxed text-subtle group-hover:text-ink opacity-80">
+                {feature.description}
+              </p>
+            </div>
+
+            <div class="mt-8 flex justify-between items-end">
+              <span class="text-xs font-bold tracking-widest uppercase border border-ink px-2 py-1 bg-canvas group-hover:bg-transparent">
+                {feature.count}
+              </span>
+              <ArrowRight className="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 text-center bg-ink text-canvas">
+    <h2
+      class="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 text-transparent text-stroke bg-clip-text bg-gradient-to-b from-canvas to-subtle"
+      style="-webkit-text-stroke: 1px var(--color-canvas);"
+    >
+      Level Up Now
+    </h2>
+    <a
+      href="/kanji"
+      class="inline-block bg-brand-neon text-ink px-12 py-4 text-xl font-bold uppercase tracking-widest hover:scale-105 transition-transform"
+    >
+      Mulai Petualangan
+    </a>
+  </section>
+</Layout>

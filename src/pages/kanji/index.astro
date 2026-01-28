@@ -1,0 +1,58 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import KanjiList from "../../components/kanji/KanjiList";
+import { materiService } from "../../services/materi";
+import { BookOpen, Layers } from "lucide-react";
+
+// Fetch kanji data from Supabase using materiService
+const kanjiData = await materiService.getKanji();
+console.log(`Loaded ${kanjiData.length} kanji from Supabase via Service`);
+---
+
+<Layout title="Kanji">
+  <section>
+    <div class="border-b border-border-line bg-surface/30 p-8 lg:p-16">
+      <!-- Header -->
+      <div class="max-w-7xl mx-auto">
+        <div
+          class="inline-flex items-center gap-2 border border-ink px-3 py-1 mb-6"
+        >
+          <span class="font-jp font-bold">漢字</span>
+          <span class="text-xs font-bold tracking-widest uppercase"
+            >Database</span
+          >
+        </div>
+
+        <h1
+          class="text-8xl font-black tracking-tighter uppercase leading-none mb-6"
+        >
+          Kanji<br /><span
+            class="text-transparent"
+            style="-webkit-text-stroke: 2px var(--color-ink);">Collection</span
+          >
+        </h1>
+
+        <p class="text-xl max-w-2xl leading-relaxed text-subtle">
+          Master the characters. Filter by JLPT level, stroke count, or
+          category.
+        </p>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/flashcards"
+            class="btn-swiss bg-brand-neon text-ink border-transparent hover:bg-ink hover:text-brand-neon"
+          >
+            <Layers className="h-4 w-4 mr-2" />
+            Flashcard Mode
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-auto border-b border-border-line">
+      <!-- Kanji List Component -->
+      <KanjiList initialKanji={kanjiData} client:visible />
+    </div>
+  </section>
+</Layout>

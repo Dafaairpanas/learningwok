@@ -1,0 +1,124 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { Settings as SettingsIcon, Save } from "lucide-react";
+---
+
+<AdminLayout title="System Settings">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-ink">Pengaturan Sistem</h2>
+        <p class="text-sm text-subtle">Konfigurasi aplikasi Nihongoin</p>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="rounded-2xl border border-border-line bg-canvas p-6">
+        <h3 class="text-lg font-medium text-ink mb-4">Informasi Aplikasi</h3>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label class="block text-sm font-medium text-ink"
+              >Nama Aplikasi</label
+            >
+            <input
+              type="text"
+              value="Nihongoin"
+              disabled
+              class="mt-1 block w-full rounded-md border-border-line bg-surface shadow-sm text-subtle p-2 border"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-ink">Versi</label>
+            <input
+              type="text"
+              value="1.0.0"
+              disabled
+              class="mt-1 block w-full rounded-md border-border-line bg-surface shadow-sm text-subtle p-2 border"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-border-line bg-canvas p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-medium text-ink">Preferensi</h3>
+          <button
+            class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80"
+          >
+            <Save className="h-4 w-4" />
+            Simpan Perubahan
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-medium text-ink">Maintenance Mode</h4>
+              <p class="text-xs text-subtle">
+                Aktifkan mode maintenance untuk mencegah akses user.
+              </p>
+            </div>
+            <div
+              class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+            >
+              <input
+                type="checkbox"
+                name="toggle"
+                id="maintenance-toggle"
+                class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300"
+              />
+              <label
+                for="maintenance-toggle"
+                class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+              ></label>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-border-line">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-medium text-ink">Registration</h4>
+                <p class="text-xs text-subtle">
+                  Izinkan pendaftaran user baru.
+                </p>
+              </div>
+              <div
+                class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+              >
+                <input
+                  type="checkbox"
+                  name="toggle"
+                  id="reg-toggle"
+                  checked
+                  class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300"
+                />
+                <label
+                  for="reg-toggle"
+                  class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                ></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  /* Simple Toggle Switch CSS */
+  .toggle-checkbox:checked {
+    right: 0;
+    border-color: #68d391;
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    background-color: #68d391;
+  }
+  .toggle-checkbox {
+    right: 0;
+    transition: all 0.3s;
+  }
+  .toggle-label {
+    width: 2.5rem; /* w-10 */
+  }
+</style>
