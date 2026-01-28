@@ -27,20 +27,16 @@ import ThemeToggle from "../ThemeToggle.astro";
     class="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
   >
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 group">
-      <img
-        src="/logo-light.png"
-        alt="Nihongoin Logo"
-        class="w-12 h-12 group-hover:scale-110 transition-transform dark:hidden"
-      />
-      <img
-        src="/logo-dark.png"
-        alt="Nihongoin Logo"
-        class="w-12 h-12 group-hover:scale-110 transition-transform hidden dark:block"
-      />
-      <span class="font-display font-bold text-xl tracking-tighter text-ink">
-        NIHONGO<span class="text-brand-orange">IN</span>
-      </span>
+    <a
+      href="/"
+      class="flex items-center gap-3 font-black text-xl uppercase tracking-tighter group"
+    >
+      <div
+        class="w-10 h-10 bg-brand-neon flex items-center justify-center border-2 border-ink shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none transition-all"
+      >
+        <span class="text-xl text-ink">IN</span>
+      </div>
+      <span class="text-ink">Nihongoin</span>
     </a>
 
     <nav class="hidden md:flex items-center gap-1">
